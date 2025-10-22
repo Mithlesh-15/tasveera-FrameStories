@@ -10,11 +10,22 @@ import "./index.css";
 import App from "./App.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
+import Home from "./pages/Home.jsx";
+import Create from "./pages/Create.jsx";
+import Search from "./pages/Search.jsx";
+import Videos from "./pages/Videos.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<App />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/create" element={<Create />} />
+        <Route path="/videos" element={<Videos />} />
+        <Route path="/profile" element={<Profile />} />
+      </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
     </>
