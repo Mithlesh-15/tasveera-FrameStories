@@ -1,8 +1,14 @@
 import React from 'react'
+import PostCard from '../components/PostCard'
+import Loading from '../components/Loading'
 
 function Home() {
   return (
-    <div>Home</div>
+    <>
+    <PostCard/>
+    <PostCard/>
+    <Loading/>
+    </>
   )
 }
 
