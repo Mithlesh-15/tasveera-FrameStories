@@ -13,14 +13,14 @@ export default function PostCard({ data }) {
   } = data;
   const [liked, setLiked] = useState(like);
   const [followed, setFollowed] = useState(follow);
-  const [likeCountState, setLikeCountState] = useState(likeCount)
+  const [likeCountState, setLikeCountState] = useState(likeCount);
   const toggleLike = () => {
     if (liked) {
       setLiked(false);
-      setLikeCountState(likeCountState-1)
+      setLikeCountState(likeCountState - 1);
     } else {
       setLiked(true);
-      setLikeCountState(likeCountState+1);
+      setLikeCountState(likeCountState + 1);
     }
   };
   const toggleFollow = () => {
@@ -53,7 +53,7 @@ export default function PostCard({ data }) {
                 <span>Follow</span>
               </button>
             ) : (
-              <button className="bg-white hover:bg-gray-200 text-black border-1 border-black font-semibold text-sm px-6 py-1.5 rounded-lg transition-colors">
+              <button className="bg-white hover:bg-gray-200 text-black border border-black font-semibold text-sm px-6 py-1.5 rounded-lg transition-colors">
                 <span>Unfollow</span>
               </button>
             )}
@@ -70,7 +70,12 @@ export default function PostCard({ data }) {
       <div className="bg-white">
         {/* Image */}
         <div
-          onDoubleClick={() => setLiked(true)}
+          onDoubleClick={() => {
+            if (!liked) {
+              setLiked(true);
+              setLikeCountState(likeCountState + 1);
+            }
+          }}
           className="w-full aspect-square bg-gray-100"
         >
           <img
@@ -99,7 +104,7 @@ export default function PostCard({ data }) {
       <div className="px-4 pb-4">
         <p className="text-sm flex gap-2">
           <span className="font-semibold">rvcjinsta</span>
-            {caption}
+          {caption}
         </p>
       </div>
       <hr />
