@@ -3,10 +3,18 @@ import PostCard from '../components/PostCard'
 import Loading from '../components/Loading'
 
 function Home() {
+  const data ={
+    profilePhoto:"https://images.pexels.com/photos/6620658/pexels-photo-6620658.jpeg",
+    authorName:"RVJC",
+    follow:false,
+    pictureLink:"https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg",
+    like:false,
+    likeCount:356,
+    caption:"kuch to hai"
+  }
   return (
     <>
-    <PostCard/>
-    <PostCard/>
+    <PostCard data={data} />
     <Loading/>
     </>
   )
