@@ -11,7 +11,7 @@ import App from "./App.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Home from "./pages/Home.jsx";
-import Create from "./pages/Create.jsx";
+import CreatePost from "./pages/CreatePost.jsx";
 import Search from "./pages/Search.jsx";
 import Videos from "./pages/Videos.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -22,7 +22,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/create" element={<Create />} />
+        <Route path="/create" element={<CreatePost />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/profile/:userid" element={<Profile />} />
       </Route>

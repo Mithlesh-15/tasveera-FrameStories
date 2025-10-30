@@ -4,8 +4,8 @@ import Loading from '../components/Loading'
 
 function Videos() {
   const data ={
-    profilePhoto:"https://images.pexels.com/photos/6620658/pexels-photo-6620658.jpeg",
-    authorName:"RVJC",
+    profilePhoto:"https://images.pexels.com/photos/8386605/pexels-photo-8386605.jpeg",
+    authorName:"Jack Bhai",
     follow:false,
     fileLink:"https://www.pexels.com/download/video/19149712/",
     like:false,
