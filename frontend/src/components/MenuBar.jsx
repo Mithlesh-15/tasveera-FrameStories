@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Home,
   Search,
-  Compass,
   Film,
-  MessageCircle,
-  Heart,
   PlusSquare,
   Menu,
   MessageCircleQuestionMark,
@@ -123,7 +120,7 @@ export default function MenuBar() {
           ))}
 
           <NavLink
-            to="/profile"
+            to="/profile/0000000"
             className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <User size={24} strokeWidth={strokeWidth.profile} />
