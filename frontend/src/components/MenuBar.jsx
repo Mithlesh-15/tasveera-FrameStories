@@ -7,11 +7,13 @@ import {
   Menu,
   MessageCircleQuestionMark,
   User,
+  LogOut,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
 export default function MenuBar() {
   const location = useLocation();
+  const [showLogout, setShowLogout] = useState(false);
 
   const [strokeWidth, setStrokeWidth] = useState({
     home: 2,
@@ -47,6 +49,7 @@ export default function MenuBar() {
       strokeWidth: "create",
     },
   ];
+
   useEffect(() => {
     const path = location.pathname;
 
@@ -92,8 +95,23 @@ export default function MenuBar() {
       });
     }
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    // Yahan logout logic add karo
+    console.log("Logout clicked");
+    // Example: localStorage.clear(); navigate('/login');
+  };
+
   return (
     <>
+      {/* Overlay - Click anywhere to close logout */}
+      {showLogout && (
+        <div
+          className="fixed inset-0 bg-opacity-20 z-40"
+          onClick={() => setShowLogout(false)}
+        />
+      )}
+
       {/* Sidebar Navigation - Hidden on mobile, visible on lg screens */}
       <div className="hidden lg:block fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 p-4">
         <div className="mb-8">
@@ -120,7 +138,7 @@ export default function MenuBar() {
           ))}
 
           <NavLink
-            to="/profile/0000000"
+            to="/profile/0"
             className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <User size={24} strokeWidth={strokeWidth.profile} />
@@ -129,10 +147,30 @@ export default function MenuBar() {
         </nav>
 
         <div className="absolute bottom-4 left-4 right-4">
-          <button className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
-            <Menu size={24} strokeWidth={2} />
-            <span className="text-base font-normal">More</span>
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowLogout(!showLogout)}
+              className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <Menu size={24} strokeWidth={2} />
+              <span className="text-base font-normal">More</span>
+            </button>
+
+            {/* Logout Dropdown */}
+            {showLogout && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <LogOut size={24} strokeWidth={2} className="text-red-500" />
+                  <span className="text-base font-normal text-red-500">
+                    Log out
+                  </span>
+                </button>
+              </div>
+            )}
+          </div>
 
           <button className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors mt-2">
             <MessageCircleQuestionMark size={24} strokeWidth={2} />
@@ -173,7 +211,7 @@ export default function MenuBar() {
           </NavLink>
 
           <NavLink
-            to="/profile"
+            to="/profile/0"
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <User size={28} strokeWidth={strokeWidth.profile} />
