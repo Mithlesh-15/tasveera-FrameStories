@@ -36,31 +36,7 @@ function SearchPageLayout() {
       name: "kj",
       picture:
         "https://images.pexels.com/photos/17300044/pexels-photo-17300044.jpeg",
-    },
-    {
-      _id: 5,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/17300044/pexels-photo-17300044.jpeg",
-    },
-    {
-      _id: 5,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/17300044/pexels-photo-17300044.jpeg",
-    },
-    {
-      _id: 5,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/17300044/pexels-photo-17300044.jpeg",
-    },
-    {
-      _id: 5,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/17300044/pexels-photo-17300044.jpeg",
-    },
+    }
   ];
   const profileClick = (userid) => {
     nevigate(`/profile/${userid}`);
@@ -69,12 +45,12 @@ function SearchPageLayout() {
 
   return (
     <div className="max-h-[85vh] bg-white flex flex-col">
-      {/* SEARCH HEADING (जैसा फोटो में 'Search' दिख रहा है) */}
+      {/* SEARCH HEADING  */}
       <div className="px-4 mt-8">
         <h2 className="text-xl font-semibold">Search</h2>
       </div>
 
-      {/* SEARCH BAR (फोटो के लेआउट को ज़्यादा फॉलो करने के लिए) */}
+      {/* SEARCH BAR */}
       <div className="px-4 mt-3">
         <div className="flex items-center bg-gray-100 rounded-lg p-2.5 border">
           {/* Search Icon (left) */}

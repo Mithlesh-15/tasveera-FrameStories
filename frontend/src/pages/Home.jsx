@@ -17,7 +17,7 @@ function Home() {
   };
   return (
     <>
-        <PostCard data={data} />
+      <PostCard data={data} />
       <Loading />
     </>
   );
