@@ -85,7 +85,7 @@ export default function MenuBar() {
         create: 3,
         profile: 2,
       });
-    } else if (path === "/profile") {
+    } else if (path.startsWith("/profile")) {
       setStrokeWidth({
         home: 2,
         search: 2,
