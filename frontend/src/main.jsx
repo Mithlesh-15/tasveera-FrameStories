@@ -15,6 +15,7 @@ import CreatePost from "./pages/CreatePost.jsx";
 import Search from "./pages/Search.jsx";
 import Videos from "./pages/Videos.jsx";
 import Profile from "./pages/Profile.jsx";
+import Post from "./pages/Post.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
         <Route path="/create" element={<CreatePost />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/profile/:userid" element={<Profile />} />
+        <Route path="/post/:postid" element={<Post />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
