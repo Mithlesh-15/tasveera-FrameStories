@@ -2,7 +2,7 @@ import React from "react";
 import { Search } from "lucide-react";
 import UserProfileCard from "../components/UserProfileCard";
 import { useNavigate } from "react-router-dom";
-import "../utils/scrollBarHide.css"
+import "../utils/scrollBarHide.css";
 
 function SearchPageLayout() {
   const nevigate = useNavigate();
@@ -13,35 +13,10 @@ function SearchPageLayout() {
       picture:
         "https://images.pexels.com/photos/33517042/pexels-photo-33517042.jpeg",
     },
-    {
-      _id: 2,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/32523802/pexels-photo-32523802.jpeg",
-    },
-    {
-      _id: 3,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/1375849/pexels-photo-1375849.jpeg",
-    },
-    {
-      _id: 4,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg",
-    },
-    {
-      _id: 5,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/17300044/pexels-photo-17300044.jpeg",
-    }
   ];
   const profileClick = (userid) => {
     nevigate(`/profile/${userid}`);
   };
-  
 
   return (
     <div className="max-h-[85vh] bg-white flex flex-col">
@@ -74,10 +49,7 @@ function SearchPageLayout() {
           ) : (
             arr.map((item) => (
               <div key={item._id} onClick={() => profileClick(item._id)}>
-                <UserProfileCard
-                  username={item.name}
-                  imageUrl={item.picture}
-                />
+                <UserProfileCard username={item.name} imageUrl={item.picture} />
               </div>
             ))
           )}

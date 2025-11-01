@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Heart, MessageCircle, Bookmark, Grid, User, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function InstagramProfile() {
   const [owner, setOwner] = useState(true);
@@ -158,7 +159,8 @@ export default function InstagramProfile() {
         {/* Posts Grid */}
         <div className="grid grid-cols-3 gap-1 md:gap-4 mt-1">
           {posts.map((post) => (
-            <div
+            <Link
+              to={`/post/${post.id}`}
               key={post.id}
               className="relative aspect-square group cursor-pointer"
             >
@@ -167,7 +169,7 @@ export default function InstagramProfile() {
                 alt={`Post ${post.id}`}
                 className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
               />
-            </div>
+            </Link>
           ))}
         </div>
       </div>
