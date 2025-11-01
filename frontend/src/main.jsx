@@ -16,6 +16,7 @@ import Search from "./pages/Search.jsx";
 import Videos from "./pages/Videos.jsx";
 import Profile from "./pages/Profile.jsx";
 import Post from "./pages/Post.jsx";
+import NotFound from "./pages/NotFount.jsx"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="*" element={<NotFound />} />
     </>
   )
 );
