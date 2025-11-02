@@ -87,9 +87,9 @@ export default function InstagramProfile() {
               <div className="flex gap-2">
                 {owner ? (
                   <>
-                    <button className="flex-1 bg-gray-200 hover:bg-blue-200 text-black font-semibold py-2 px-4 rounded-lg transition text-sm">
+                    <Link to="/update-profile" className="flex-1 bg-gray-200 hover:bg-blue-200 text-black font-semibold py-2 px-4 rounded-lg transition text-sm text-center">
                       Edit Profile
-                    </button>
+                    </Link>
                     <button className="flex-1 bg-gray-200 hover:bg-red-300 text-red-500 font-semibold py-2 px-4 rounded-lg transition text-sm">
                       Logout
                     </button>
