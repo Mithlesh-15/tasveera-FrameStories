@@ -4,10 +4,21 @@ const userSchema = new Schema(
     username: {
       type: String,
       unique: true,
+      require:true,
+      lowercase: true
     },
     fullName: {
       type: String,
       require: true,
+    },
+    email:{
+      type:String,
+      require:true,
+      unique:true,
+      lowercase: true
+    },
+    password:{
+      type:String,
     },
     profilePhoto: {
       type: String,
