@@ -3,6 +3,8 @@ import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../utils/firebaseConfig";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -10,24 +12,29 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
+  const GoogleLogin = async () => {
+    await signInWithPopup(auth, googleProvider);
+    console.log(auth);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-   try {
-     const response = await axios.post("url",{email,password})
-     if(response.success){
-       setMessage(response.message)
-       setLoading(false);
-       navigate("/");
-     }
-      setMessage(response.message)
-       setLoading(false);
-       return;
-   } catch (error) {
-    setMessage("Something wen wrong, Please try again")
-       setLoading(false);
-       console.error(error)
-   }
+    try {
+      const response = await axios.post("url", { email, password });
+      if (response.success) {
+        setMessage(response.message);
+        setLoading(false);
+        navigate("/");
+      }
+      setMessage(response.message);
+      setLoading(false);
+      return;
+    } catch (error) {
+      setMessage("Something wen wrong, Please try again");
+      setLoading(false);
+      console.error(error);
+    }
   };
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
@@ -79,7 +86,11 @@ function Login() {
 
           {/* Facebook Login */}
           <button
-            className="flex items-center justify-center gap-1 w-full text-blue-800 font-semibold text-sm mb-3"
+            className="flex items-center justify-center gap-1 w-full text-blue-800 font-semibold text-sm mb-3
+             hover:bg-blue-600 hover:text-white active:scale-95 
+             transition-all duration-300 transform
+             border-2 border-blue-600 rounded-lg py-2 px-4
+             shadow-md hover:shadow-lg"
             onClick={(e) => {
               e.preventDefault();
               console.log("Facebook Login clicked");
@@ -91,11 +102,12 @@ function Login() {
 
           {/* Gmail/Google Login */}
           <button
-            className="flex items-center gap-2 justify-center w-full text-red-600 font-semibold text-sm mb-4"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log("Gmail/Google Login clicked");
-            }}
+            className="flex items-center gap-2 justify-center w-full text-red-600 font-semibold text-sm mb-4 
+             hover:bg-red-600 hover:text-white active:scale-95 
+             transition-all duration-300 transform
+             border-2 border-red-600 rounded-lg py-2 px-4
+             shadow-md hover:shadow-lg"
+            onClick={GoogleLogin}
           >
             <SiGmail />
             Log in with Gmail
