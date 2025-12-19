@@ -1,8 +1,10 @@
 import axios from "axios";
+import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
+import { auth, googleProvider } from "../utils/firebaseConfig";
 function SignUp() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -11,6 +13,12 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+
+  const GoogleLogin = async () => {
+      await signInWithPopup(auth, googleProvider);
+      console.log(auth);
+    };
+
   const handleSubmit = async (e) => { 
     e.preventDefault();
     setLoading(true);
@@ -55,27 +63,32 @@ function SignUp() {
 
           {/* Facebook Login Button (Main CTA) */}
           <button
-            className="flex items-center justify-center gap-1 w-full bg-blue-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors mb-2"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log("Facebook Sign Up clicked");
-            }}
-          >
-            <FaFacebookF />
-            Log in with Facebook
-          </button>
+                      className="flex items-center justify-center gap-1 w-full text-blue-800 font-semibold text-sm mb-3
+                       hover:bg-blue-600 hover:text-white active:scale-95 
+                       transition-all duration-300 transform
+                       border-2 border-blue-600 rounded-lg py-2 px-4
+                       shadow-md hover:shadow-lg"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log("Facebook Login clicked");
+                      }}
+                    >
+                      <FaFacebookF />
+                      Sign up with Facebook
+                    </button>
 
           {/* Gmail/Google Login Button (User Request Addition) */}
           <button
-            className="flex items-center justify-center gap-2 w-full bg-red-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors mb-4"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log("Gmail/Google Sign Up clicked");
-            }}
-          >
-            <SiGmail />
-            Sign up with Gmail
-          </button>
+                      className="flex items-center gap-2 justify-center w-full text-red-600 font-semibold text-sm mb-4 
+                       hover:bg-red-600 hover:text-white active:scale-95 
+                       transition-all duration-300 transform
+                       border-2 border-red-600 rounded-lg py-2 px-4
+                       shadow-md hover:shadow-lg"
+                      onClick={GoogleLogin}
+                    >
+                      <SiGmail />
+                      Sign up with Gmail
+                    </button>
 
           {/* OR Separator */}
           <div className="flex items-center w-full my-3">
