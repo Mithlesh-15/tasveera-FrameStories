@@ -4,7 +4,7 @@ import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../utils/firebaseConfig";
+import { auth, facebookProvider, googleProvider } from "../utils/firebaseConfig";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -12,8 +12,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
-  const GoogleLogin = async () => {
-    await signInWithPopup(auth, googleProvider);
+  const handleAuthLogiin = async () => {
     console.log(auth);
   };
 
@@ -91,9 +90,9 @@ function Login() {
              transition-all duration-300 transform
              border-2 border-blue-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log("Facebook Login clicked");
+            onClick={async ()=>{
+              await signInWithPopup(auth,facebookProvider)
+              handleAuthLogiin()
             }}
           >
             <FaFacebookF />
@@ -107,7 +106,10 @@ function Login() {
              transition-all duration-300 transform
              border-2 border-red-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
-            onClick={GoogleLogin}
+            onClick={async ()=>{
+              await signInWithPopup(auth,googleProvider)
+              handleAuthLogiin()
+            }}
           >
             <SiGmail />
             Log in with Gmail
