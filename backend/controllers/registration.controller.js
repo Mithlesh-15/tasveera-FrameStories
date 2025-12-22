@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js'
 
+
 export const signup = async (req, res) => {
   try {
     const { email, fullName, username, password } = req.body;
@@ -90,6 +91,71 @@ export const signup = async (req, res) => {
 
   } catch (error) {
     console.error('Signup error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error. Please try again later'
+    });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required'
+      });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Set token in cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+    // Send response (exclude password)
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        _id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        username: user.username
+      }
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
     return res.status(500).json({
       success: false,
       message: 'Internal server error. Please try again later'
