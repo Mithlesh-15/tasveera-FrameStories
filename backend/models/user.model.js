@@ -4,21 +4,21 @@ const userSchema = new Schema(
     username: {
       type: String,
       unique: true,
-      require:true,
-      lowercase: true
+      require: true,
+      lowercase: true,
     },
     fullName: {
       type: String,
       require: true,
     },
-    email:{
-      type:String,
-      require:true,
-      unique:true,
-      lowercase: true
+    email: {
+      type: String,
+      require: true,
+      unique: true,
+      lowercase: true,
     },
-    password:{
-      type:String,
+    password: {
+      type: String,
     },
     profilePhoto: {
       type: String,
@@ -28,24 +28,33 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    posts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Post",
-      },
-    ],
-    followers: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    following: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    posts: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Post",
+        },
+      ],
+      default: [],
+    },
+    followers: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      default: [],
+    },
+    following: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true }
 );

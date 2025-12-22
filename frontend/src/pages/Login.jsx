@@ -121,7 +121,7 @@ function Login() {
           <p className="text-gray-900">
             Don't have an account?
             <Link
-              to="/signup"
+              to="/registration/signup"
               className="text-blue-500 font-semibold ml-1 cursor-pointer"
             >
               Sign up

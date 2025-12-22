@@ -31,8 +31,8 @@ const router = createBrowserRouter(
         <Route path="/post/:postid" element={<Post />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
       </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/registration/login" element={<Login />} />
+      <Route path="/registration/signup" element={<SignUp />} />
       <Route path="*" element={<NotFound />} />
     </>
   )

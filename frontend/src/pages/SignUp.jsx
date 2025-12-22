@@ -150,7 +150,7 @@ function SignUp() {
           <p className="text-gray-900">
             Have an account?
             <Link
-              to="/login"
+              to="/registration/login"
               className="text-blue-500 font-semibold ml-1 cursor-pointer"
             >
               Log in
