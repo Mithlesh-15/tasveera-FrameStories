@@ -11,12 +11,13 @@ import {
 } from "../utils/firebaseConfig";
 function SignUp() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleAuthLogiin = async () => {
     console.log(auth);
@@ -26,18 +27,19 @@ function SignUp() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("url", {
+      const response = await axios.post("/api/v1/registration/signup", {
         email,
         password,
         username,
-        name,
+        fullName,
       });
-      if (response.success) {
+      setSuccess(response.data.success);
+      if (response.data.success) {
         setMessage(response.message);
         setLoading(false);
         navigate("/");
       }
-      setMessage(response.message);
+      setMessage(response.data.message);
       setLoading(false);
       return;
     } catch (error) {
@@ -116,8 +118,8 @@ function SignUp() {
               type="text"
               placeholder="Full Name"
               className="w-full px-3 py-2 mb-2 text-xs border border-gray-300 rounded-sm focus:ring-0 focus:border-gray-500 bg-gray-50 placeholder-gray-500"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
             <input
               type="text"
@@ -133,7 +135,7 @@ function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <p className="text-center text-red-500 font-bold">{message}</p>
+            <p className={`${success?"text-green-500":"text-red-500"}text-center font-bold`}>{message}</p>
 
             {/* Sign Up Button */}
             <button
@@ -150,7 +152,7 @@ function SignUp() {
           <p className="text-gray-900">
             Have an account?
             <Link
-              to="/registration/login"
+              to="/login"
               className="text-blue-500 font-semibold ml-1 cursor-pointer"
             >
               Log in
