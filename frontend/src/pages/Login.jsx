@@ -4,13 +4,18 @@ import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
-import { auth, facebookProvider, googleProvider } from "../utils/firebaseConfig";
+import {
+  auth,
+  facebookProvider,
+  googleProvider,
+} from "../utils/firebaseConfig";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleAuthLogiin = async () => {
     console.log(auth);
@@ -20,17 +25,27 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("url", { email, password });
-      if (response.success) {
-        setMessage(response.message);
+      const response = await axios.post("/api/v1/registration/login", {
+        email,
+        password,
+      });
+
+      setSuccess(response.data.success);
+
+      if (response.data.success) {
+        setMessage(response.data.message);
         setLoading(false);
         navigate("/");
       }
-      setMessage(response.message);
+      setMessage(response.data.message);
       setLoading(false);
       return;
     } catch (error) {
-      setMessage("Something wen wrong, Please try again");
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Something wen wrong, Please try again");
+      }
       setLoading(false);
       console.error(error);
     }
@@ -64,7 +79,13 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <p className="text-center text-red-500 font-bold">{message}</p>
+            <p
+              className={`${
+                success ? "text-green-500" : "text-red-500"
+              } text-center font-bold`}
+            >
+              {message}
+            </p>
             {/* Log In Button */}
             <button
               type="submit"
@@ -90,9 +111,9 @@ function Login() {
              transition-all duration-300 transform
              border-2 border-blue-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
-            onClick={async ()=>{
-              await signInWithPopup(auth,facebookProvider)
-              handleAuthLogiin()
+            onClick={async () => {
+              await signInWithPopup(auth, facebookProvider);
+              handleAuthLogiin();
             }}
           >
             <FaFacebookF />
@@ -106,9 +127,9 @@ function Login() {
              transition-all duration-300 transform
              border-2 border-red-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
-            onClick={async ()=>{
-              await signInWithPopup(auth,googleProvider)
-              handleAuthLogiin()
+            onClick={async () => {
+              await signInWithPopup(auth, googleProvider);
+              handleAuthLogiin();
             }}
           >
             <SiGmail />

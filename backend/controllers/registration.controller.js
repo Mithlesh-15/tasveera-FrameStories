@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
 export const signup = async (req, res) => {
-  console.log("aaya");
   try {
     const { email, fullName, username, password } = req.body;
 
@@ -76,7 +75,6 @@ export const signup = async (req, res) => {
     });
 
     // Send response (exclude password)
-    console.log("Ho gya");
     return res.status(201).json({
       success: true,
       message: "User registered successfully",

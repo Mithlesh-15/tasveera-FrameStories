@@ -43,7 +43,11 @@ function SignUp() {
       setLoading(false);
       return;
     } catch (error) {
-      setMessage("Something wen wrong, Please try again");
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Something wen wrong, Please try again");
+      }
       setLoading(false);
       console.error(error);
     }
@@ -135,7 +139,13 @@ function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <p className={`${success?"text-green-500":"text-red-500"}text-center font-bold`}>{message}</p>
+            <p
+              className={`${
+                success ? "text-green-500" : "text-red-500"
+              } text-center font-bold`}
+            >
+              {message}
+            </p>
 
             {/* Sign Up Button */}
             <button
