@@ -1,5 +1,5 @@
 import axios from "axios";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithRedirect } from "firebase/auth";
 import { useState } from "react";
 import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
@@ -78,7 +78,7 @@ function SignUp() {
                        border-2 border-blue-600 rounded-lg py-2 px-4
                        shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithPopup(auth, facebookProvider);
+              await signInWithRedirect(auth, facebookProvider);
               handleAuthLogiin();
             }}
           >
@@ -94,7 +94,7 @@ function SignUp() {
                        border-2 border-red-600 rounded-lg py-2 px-4
                        shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithPopup(auth, googleProvider);
+              await signInWithRedirect(auth, googleProvider);
               handleAuthLogiin();
             }}
           >

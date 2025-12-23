@@ -3,7 +3,7 @@ import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithRedirect } from "firebase/auth";
 import {
   auth,
   facebookProvider,
@@ -112,7 +112,7 @@ function Login() {
              border-2 border-blue-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithPopup(auth, facebookProvider);
+              await signInWithRedirect(auth, facebookProvider);
               handleAuthLogiin();
             }}
           >
@@ -128,7 +128,7 @@ function Login() {
              border-2 border-red-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithPopup(auth, googleProvider);
+              await signInWithRedirect(auth, googleProvider);
               handleAuthLogiin();
             }}
           >
