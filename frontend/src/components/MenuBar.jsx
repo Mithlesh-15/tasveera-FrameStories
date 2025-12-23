@@ -10,6 +10,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import logout from "../utils/logout";
 
 export default function MenuBar() {
   const location = useLocation();
@@ -96,22 +97,8 @@ export default function MenuBar() {
     }
   }, [location.pathname]);
 
-  const handleLogout = () => {
-    // Yahan logout logic add karo
-    console.log("Logout clicked");
-    // Example: localStorage.clear(); navigate('/login');
-  };
-
   return (
     <>
-      {/* Overlay - Click anywhere to close logout */}
-      {showLogout && (
-        <div
-          className="fixed inset-0 bg-opacity-20 z-40"
-          onClick={() => setShowLogout(false)}
-        />
-      )}
-
       {/* Sidebar Navigation - Hidden on mobile, visible on lg screens */}
       <div className="hidden lg:block fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 p-4">
         <div className="mb-8">
@@ -131,7 +118,10 @@ export default function MenuBar() {
               className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors relative"
             >
               <div className="relative">
-                <item.icon size={24} strokeWidth={strokeWidth[item.strokeWidth]} />
+                <item.icon
+                  size={24}
+                  strokeWidth={strokeWidth[item.strokeWidth]}
+                />
               </div>
               <span className="text-base font-normal">{item.label}</span>
             </NavLink>
@@ -150,7 +140,7 @@ export default function MenuBar() {
           <div className="relative">
             <button
               onClick={() => setShowLogout(!showLogout)}
-              className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+              className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
             >
               <Menu size={24} strokeWidth={2} />
               <span className="text-base font-normal">More</span>
@@ -158,11 +148,11 @@ export default function MenuBar() {
 
             {/* Logout Dropdown */}
             {showLogout && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
+              <div
+                onClick={logout}
+                className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+              >
+                <button className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
                   <LogOut size={24} strokeWidth={2} className="text-red-500" />
                   <span className="text-base font-normal text-red-500">
                     Log out

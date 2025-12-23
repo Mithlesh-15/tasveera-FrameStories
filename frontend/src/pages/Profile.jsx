@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Heart, MessageCircle, Bookmark, Grid, User, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
+import logout from "../utils/logout";
 
 export default function InstagramProfile() {
   const [owner, setOwner] = useState(true);
@@ -90,7 +91,7 @@ export default function InstagramProfile() {
                     <Link to="/update-profile" className="flex-1 bg-gray-200 hover:bg-blue-200 text-black font-semibold py-2 px-4 rounded-lg transition text-sm text-center">
                       Edit Profile
                     </Link>
-                    <button className="flex-1 bg-gray-200 hover:bg-red-300 text-red-500 font-semibold py-2 px-4 rounded-lg transition text-sm">
+                    <button className="flex-1 bg-gray-200 hover:bg-red-300 text-red-500 font-semibold py-2 px-4 rounded-lg transition text-sm" onClick={logout}>
                       Logout
                     </button>
                   </>
