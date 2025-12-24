@@ -3,7 +3,7 @@ import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { signInWithRedirect } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import {
   auth,
   facebookProvider,
@@ -16,19 +16,18 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
-
-  const handleAuthLogiin = async () => {
+  const handleAuthLogin = async () => {
     setLoading(true);
     try {
       const response = await axios.post("/api/v1/registration/auth-provider", {
-        email:auth.currentUser.email,
+        email: auth.currentUser.email,
         fullName: auth.currentUser.displayName,
-        username : auth.currentUser.email,
-        profilePhoto: auth.currentUser.photoURL
+        username: auth.currentUser.email,
+        profilePhoto: auth.currentUser.photoURL,
       });
 
       setSuccess(response.data.success);
-      console.log(response)
+      console.log(response);
       if (response.data.success) {
         setMessage(response.data.message);
         setLoading(false);
@@ -77,6 +76,7 @@ function Login() {
       console.error(error);
     }
   };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
       <div className="w-full max-w-sm flex flex-col items-center">
@@ -139,8 +139,15 @@ function Login() {
              border-2 border-blue-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithRedirect(auth, facebookProvider);
-              handleAuthLogiin();
+              try {
+                await signInWithPopup(auth, facebookProvider);
+                handleAuthLogin();
+              } catch (error) {
+                setMessage(
+                  "This login option didn't work. Please try another one."
+                );
+                console.log(error);
+              }
             }}
           >
             <FaFacebookF />
@@ -155,8 +162,15 @@ function Login() {
              border-2 border-red-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithRedirect(auth, googleProvider);
-              handleAuthLogiin();
+              try {
+                await signInWithPopup(auth, googleProvider);
+                handleAuthLogin();
+              } catch (error) {
+                setMessage(
+                  "This login option didn't work. Please try another one."
+                );
+                console.log(error);
+              }
             }}
           >
             <SiGmail />

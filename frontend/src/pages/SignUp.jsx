@@ -1,5 +1,5 @@
 import axios from "axios";
-import { signInWithRedirect } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
@@ -23,14 +23,14 @@ function SignUp() {
     setLoading(true);
     try {
       const response = await axios.post("/api/v1/registration/auth-provider", {
-        email:auth.currentUser.email,
+        email: auth.currentUser.email,
         fullName: auth.currentUser.displayName,
-        username : auth.currentUser.email,
-        profilePhoto: auth.currentUser.photoURL
+        username: auth.currentUser.email,
+        profilePhoto: auth.currentUser.photoURL,
       });
 
       setSuccess(response.data.success);
-      console.log(response)
+      console.log(response);
       if (response.data.success) {
         setMessage(response.data.message);
         setLoading(false);
@@ -105,8 +105,15 @@ function SignUp() {
                        border-2 border-blue-600 rounded-lg py-2 px-4
                        shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithRedirect(auth, facebookProvider);
-              handleAuthLogin();
+              try {
+                await signInWithPopup(auth, facebookProvider);
+                handleAuthLogin();
+              } catch (error) {
+                setMessage(
+                  "This login option didn't work. Please try another one."
+                );
+                console.log(error);
+              }
             }}
           >
             <FaFacebookF />
@@ -121,8 +128,15 @@ function SignUp() {
                        border-2 border-red-600 rounded-lg py-2 px-4
                        shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithRedirect(auth, googleProvider);
-              handleAuthLogin();
+              try {
+                await signInWithPopup(auth, googleProvider);
+                handleAuthLogin();
+              } catch (error) {
+                setMessage(
+                  "This login option didn't work. Please try another one."
+                );
+                console.log(error);
+              }
             }}
           >
             <SiGmail />
