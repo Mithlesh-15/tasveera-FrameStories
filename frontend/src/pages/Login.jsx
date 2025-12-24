@@ -3,7 +3,7 @@ import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { signInWithRedirect } from "firebase/auth";
 import {
   auth,
   facebookProvider,
@@ -17,11 +17,10 @@ function Login() {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const handleAuthLogiin = async (e) => {
-    e.preventDefault();
+  const handleAuthLogiin = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("/api/v1/registration/login", {
+      const response = await axios.post("/api/v1/registration/auth-provider", {
         email:auth.currentUser.email,
         fullName: auth.currentUser.displayName,
         username : auth.currentUser.email,
@@ -29,7 +28,7 @@ function Login() {
       });
 
       setSuccess(response.data.success);
-
+      console.log(response)
       if (response.data.success) {
         setMessage(response.data.message);
         setLoading(false);
@@ -156,7 +155,7 @@ function Login() {
              border-2 border-red-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithPopup(auth, googleProvider);
+              await signInWithRedirect(auth, googleProvider);
               handleAuthLogiin();
             }}
           >

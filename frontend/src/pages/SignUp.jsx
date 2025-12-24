@@ -19,8 +19,35 @@ function SignUp() {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const handleAuthLogiin = async () => {
-    console.log(auth);
+  const handleAuthLogin = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/v1/registration/auth-provider", {
+        email:auth.currentUser.email,
+        fullName: auth.currentUser.displayName,
+        username : auth.currentUser.email,
+        profilePhoto: auth.currentUser.photoURL
+      });
+
+      setSuccess(response.data.success);
+      console.log(response)
+      if (response.data.success) {
+        setMessage(response.data.message);
+        setLoading(false);
+        navigate("/");
+      }
+      setMessage(response.data.message);
+      setLoading(false);
+      return;
+    } catch (error) {
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Something wen wrong, Please try again");
+      }
+      setLoading(false);
+      console.error(error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -79,7 +106,7 @@ function SignUp() {
                        shadow-md hover:shadow-lg"
             onClick={async () => {
               await signInWithRedirect(auth, facebookProvider);
-              handleAuthLogiin();
+              handleAuthLogin();
             }}
           >
             <FaFacebookF />
@@ -95,7 +122,7 @@ function SignUp() {
                        shadow-md hover:shadow-lg"
             onClick={async () => {
               await signInWithRedirect(auth, googleProvider);
-              handleAuthLogiin();
+              handleAuthLogin();
             }}
           >
             <SiGmail />
