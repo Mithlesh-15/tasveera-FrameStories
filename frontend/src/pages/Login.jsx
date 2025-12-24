@@ -3,7 +3,7 @@ import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { signInWithRedirect } from "firebase/auth";
+import { signInWithPopup, signInWithRedirect } from "firebase/auth";
 import {
   auth,
   facebookProvider,
@@ -17,8 +17,36 @@ function Login() {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const handleAuthLogiin = async () => {
-    console.log(auth);
+  const handleAuthLogiin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/v1/registration/login", {
+        email:auth.currentUser.email,
+        fullName: auth.currentUser.displayName,
+        username : auth.currentUser.email,
+        profilePhoto: auth.currentUser.photoURL
+      });
+
+      setSuccess(response.data.success);
+
+      if (response.data.success) {
+        setMessage(response.data.message);
+        setLoading(false);
+        navigate("/");
+      }
+      setMessage(response.data.message);
+      setLoading(false);
+      return;
+    } catch (error) {
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Something wen wrong, Please try again");
+      }
+      setLoading(false);
+      console.error(error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -128,7 +156,7 @@ function Login() {
              border-2 border-red-600 rounded-lg py-2 px-4
              shadow-md hover:shadow-lg"
             onClick={async () => {
-              await signInWithRedirect(auth, googleProvider);
+              await signInWithPopup(auth, googleProvider);
               handleAuthLogiin();
             }}
           >

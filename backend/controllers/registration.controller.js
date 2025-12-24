@@ -175,3 +175,92 @@ export const logout = async (req, res) => {
     });
   }
 };
+
+export const AuthProvider = async (req, res) => {
+  try {
+    const { email, fullName, username, profilePhoto } = req.body;
+
+    // Validation
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    // If user exists - LOGIN
+    if (user) {
+      // Generate JWT token
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+
+      // Set token in cookie
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      // Send response
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        user: {
+          _id: user._id,
+          email: user.email,
+          fullName: user.fullName,
+          username: user.username,
+          profilePhoto: user.profilePhoto,
+        },
+      });
+    }
+
+    // If user doesn't exist - SIGNUP
+
+    // Create new user
+    const newUser = new User({
+      email,
+      fullName,
+      username,
+      profilePhoto: profilePhoto || null,
+    });
+
+    await newUser.save();
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    // Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    // Send response
+    return res.status(201).json({
+      success: true,
+      message: "Account created successfully",
+      isNewUser: true,
+      user: {
+        _id: newUser._id,
+        email: newUser.email,
+        fullName: newUser.fullName,
+        username: newUser.username,
+        profilePhoto: newUser.profilePhoto,
+      },
+    });
+  } catch (error) {
+    console.error("Auth error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later",
+    });
+  }
+};
