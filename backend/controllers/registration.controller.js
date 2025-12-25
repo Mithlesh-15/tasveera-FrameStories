@@ -2,6 +2,20 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
+const JWTandCookieSetUp = (res, userId) => {
+  // Generate JWT token
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+
+  // Set token in cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+};
+
 export const signup = async (req, res) => {
   try {
     const { email, fullName, username, password } = req.body;
@@ -61,18 +75,7 @@ export const signup = async (req, res) => {
     });
 
     await newUser.save();
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    // Set token in cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    JWTandCookieSetUp(res, newUser._id);
 
     // Send response (exclude password)
     return res.status(201).json({
@@ -124,17 +127,7 @@ export const login = async (req, res) => {
       });
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    // Set token in cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    JWTandCookieSetUp(res, user._id);
 
     // Send response (exclude password)
     return res.status(200).json({
@@ -193,17 +186,7 @@ export const AuthProvider = async (req, res) => {
 
     // If user exists - LOGIN
     if (user) {
-      // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
-      });
-
-      // Set token in cookie
-      res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
+      JWTandCookieSetUp(res, user._id);
 
       // Send response
       return res.status(200).json({
@@ -230,18 +213,7 @@ export const AuthProvider = async (req, res) => {
     });
 
     await newUser.save();
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    // Set token in cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    JWTandCookieSetUp(res, newUser._id);
 
     // Send response
     return res.status(201).json({
