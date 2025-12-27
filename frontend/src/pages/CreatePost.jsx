@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {  Image, Video, Send, Loader } from "lucide-react";
+import { Image, Video, Send, Loader } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -37,49 +37,47 @@ export default function CreatePost() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    if (!postData.fileLink || postData.caption.trim() === "") {
-      setMessage("Please fill all fields");
-      setLoading(false);
-      return;
-    }
-
-    // REAL FormData
-    const payload = new FormData();
-    payload.append("media", postData.fileLink);
-    payload.append("type", postData.fileType);
-    payload.append("caption", postData.caption);
-    payload.append("purpose", "Post");
-
-    const response = await axios.post(
-      "/api/v1/post/upload",
-      payload,
-      {
-        withCredentials: true, // cookie ke liye (JWT)
+    try {
+      if (!postData.fileLink || postData.caption.trim() === "") {
+        setMessage("Please fill all fields");
+        setLoading(false);
+        return;
       }
-    );
 
-    if (response.data.success) {
-      setMessage(response.data.message);
-      navigate("/profile/me");
-    } else {
-      setMessage(response.data.message);
+      // REAL FormData
+      const payload = new FormData();
+      payload.append("media", postData.fileLink);
+      payload.append("type", postData.fileType);
+      payload.append("caption", postData.caption);
+      payload.append("purpose", "Post");
+
+      const response = await axios.post("/api/v1/post/upload", payload, {
+        withCredentials: true, // cookie ke liye (JWT)
+      });
+
+      if (response.data.success) {
+        setMessage(response.data.message);
+        navigate("/profile/me");
+      } else {
+        setMessage(response.data.message);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Something went wrong, please try again");
+      }
+      setLoading(false);
     }
-
-    setLoading(false);
-  } catch (error) {
-    if (error.response) {
-      setMessage(error.response.data.message);
-    } else {
-      setMessage("Something went wrong, please try again");
-    }
-    setLoading(false);
-  }
-};
-
+  };
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -224,11 +222,7 @@ export default function CreatePost() {
                 className="w-full px-4 py-3 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-500"
               />
             </div>
-                <p
-              className="text-red-500 text-center font-bold"
-            >
-              {message} 
-            </p>
+            <p className="text-red-500 text-center font-bold">{message}</p>
             {loading ? (
               <button
                 className="w-full bg-blue-300 hover:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-no-drop"

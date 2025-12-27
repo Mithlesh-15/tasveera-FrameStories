@@ -14,22 +14,10 @@ export const createPost = async (req, res) => {
     // cloudinary data
     const mediaUrl = req.file.path;
 
-    // extract token from cookie
-    const token = req.cookies.token;
 
-    // cheak token
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized, token missing",
-      });
-    }
-    // token verification
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const owner = decoded.userId;
     // create post in DB
     const post = await Post.create({
-        owner,
+        owner:req.userId,
         dataLink:mediaUrl,
         type:req.body.type,
         caption: req.body.caption || "",
