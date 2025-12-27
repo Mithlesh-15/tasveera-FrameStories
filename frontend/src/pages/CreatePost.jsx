@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Camera, Image, Video, Send, Loader } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import {  Image, Video, Send, Loader } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function CreatePost() {
   const location = useLocation();
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+  const [postData, setPostData] = useState({
     fileLink: null,
     caption: "",
     fileType: "image",
   });
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const [previews, setPreviews] = useState({
     fileLink: null,
@@ -17,7 +22,7 @@ export default function CreatePost() {
   const handleFileChange = (e, fieldName) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, [fieldName]: file }));
+      setPostData((prev) => ({ ...prev, [fieldName]: file }));
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviews((prev) => ({ ...prev, [fieldName]: reader.result }));
@@ -25,26 +30,57 @@ export default function CreatePost() {
       reader.readAsDataURL(file);
     }
   };
-  const [loading, setLoading] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setPostData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      if (formData.fileLink == null || formData.caption == "") {
-        alert("Please Fill All Fields");
-        return;
-      }
-    } catch (error) {
-      console.error(error);
+  try {
+    if (!postData.fileLink || postData.caption.trim() === "") {
+      setMessage("Please fill all fields");
       setLoading(false);
+      return;
     }
-  };
+
+    // REAL FormData
+    const payload = new FormData();
+    payload.append("media", postData.fileLink);
+    payload.append("type", postData.fileType);
+    payload.append("caption", postData.caption);
+    payload.append("purpose", "Post");
+
+    const response = await axios.post(
+      "/api/v1/post/upload",
+      payload,
+      {
+        withCredentials: true, // cookie ke liye (JWT)
+      }
+    );
+
+    if (response.data.success) {
+      setMessage(response.data.message);
+      navigate("/profile/me");
+    } else {
+      setMessage(response.data.message);
+    }
+
+    setLoading(false);
+  } catch (error) {
+    if (error.response) {
+      setMessage(error.response.data.message);
+    } else {
+      setMessage("Something went wrong, please try again");
+    }
+    setLoading(false);
+  }
+};
+
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (loading) {
@@ -55,6 +91,7 @@ export default function CreatePost() {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [loading]);
+
   useEffect(() => {
     if (loading) {
       const handlePopState = () => {
@@ -90,7 +127,7 @@ export default function CreatePost() {
                     type="radio"
                     name="fileType"
                     value="image"
-                    checked={formData.fileType === "image"}
+                    checked={postData.fileType === "image"}
                     onChange={handleInputChange}
                     className="w-4 h-4 text-blue-600"
                   />
@@ -102,7 +139,7 @@ export default function CreatePost() {
                     type="radio"
                     name="fileType"
                     value="video"
-                    checked={formData.fileType === "video"}
+                    checked={postData.fileType === "video"}
                     onChange={handleInputChange}
                     className="w-4 h-4 text-blue-600"
                   />
@@ -114,12 +151,12 @@ export default function CreatePost() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-3">
-                Upload {formData.fileType === "image" ? "Image" : "Video"}
+                Upload {postData.fileType === "image" ? "Image" : "Video"}
               </label>
               <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
                 {previews.fileLink ? (
                   <div className="space-y-3">
-                    {formData.fileType === "image" ? (
+                    {postData.fileType === "image" ? (
                       <img
                         src={previews.fileLink}
                         alt="Preview"
@@ -137,7 +174,7 @@ export default function CreatePost() {
                       <input
                         type="file"
                         accept={
-                          formData.fileType === "image" ? "image/*" : "video/*"
+                          postData.fileType === "image" ? "image/*" : "video/*"
                         }
                         onChange={(e) => handleFileChange(e, "fileLink")}
                         className="hidden"
@@ -147,24 +184,24 @@ export default function CreatePost() {
                 ) : (
                   <label className="cursor-pointer block">
                     <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-slate-100 flex items-center justify-center">
-                      {formData.fileType === "image" ? (
+                      {postData.fileType === "image" ? (
                         <Image className="w-8 h-8 text-slate-400" />
                       ) : (
                         <Video className="w-8 h-8 text-slate-400" />
                       )}
                     </div>
                     <p className="text-slate-600 mb-1">
-                      Click to upload {formData.fileType}
+                      Click to upload {postData.fileType}
                     </p>
                     <p className="text-xs text-slate-400">
-                      {formData.fileType === "image"
+                      {postData.fileType === "image"
                         ? "PNG, JPG up to 1MB"
                         : "MP4, MOV up to 2MB"}
                     </p>
                     <input
                       type="file"
                       accept={
-                        formData.fileType === "image" ? "image/*" : "video/*"
+                        postData.fileType === "image" ? "image/*" : "video/*"
                       }
                       onChange={(e) => handleFileChange(e, "fileLink")}
                       className="hidden"
@@ -180,14 +217,18 @@ export default function CreatePost() {
               </label>
               <textarea
                 name="caption"
-                value={formData.caption}
+                value={postData.caption}
                 onChange={handleInputChange}
                 placeholder="Caption this memory..."
                 rows="4"
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-500"
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-500"
               />
             </div>
-
+                <p
+              className="text-red-500 text-center font-bold"
+            >
+              {message} 
+            </p>
             {loading ? (
               <button
                 className="w-full bg-blue-300 hover:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-no-drop"

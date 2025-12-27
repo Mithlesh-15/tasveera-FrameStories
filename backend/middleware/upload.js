@@ -1,6 +1,6 @@
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../config/cloudinary.js";
+import cloudinary from "../lib/cloudinaryConfig.js";
 
 const storage = new CloudinaryStorage({
   cloudinary,
@@ -8,7 +8,7 @@ const storage = new CloudinaryStorage({
     const isVideo = file.mimetype.startsWith("video");
 
     return {
-      folder: "Tasveera",
+      folder: req.body.purpose,
       resource_type: isVideo ? "video" : "image",
       allowed_formats: isVideo
         ? ["mp4", "mkv"]
