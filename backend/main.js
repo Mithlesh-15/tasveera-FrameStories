@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import registrationRoute from "./routes/registration.route.js"
 import PostRoute from "./routes/post.route.js"
 import cookieParser from "cookie-parser";
-dotenv.config();
+dotenv.config({path:"./.env"});
 
 
 

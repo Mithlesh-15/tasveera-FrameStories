@@ -1,5 +1,4 @@
 import Post from "../models/post.model.js";
-import jwt from "jsonwebtoken";
 
 export const createPost = async (req, res) => {
   try {

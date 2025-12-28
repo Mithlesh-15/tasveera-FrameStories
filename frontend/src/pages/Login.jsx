@@ -27,7 +27,6 @@ function Login() {
       });
 
       setSuccess(response.data.success);
-      console.log(response);
       if (response.data.success) {
         setMessage(response.data.message);
         setLoading(false);
