@@ -22,6 +22,14 @@ export const createPost = async (req, res) => {
         caption: req.body.caption || "",
     });
 
+    //  push post id into user.posts
+    await User.findByIdAndUpdate(
+      req.userId,
+      { $push: { posts: post._id } },
+      { new: true }
+    );
+
+
     // success response
     return res.status(201).json({
       success: true,
