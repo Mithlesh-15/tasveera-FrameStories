@@ -8,7 +8,7 @@ const storage = new CloudinaryStorage({
     const isVideo = file.mimetype.startsWith("video");
 
     return {
-      folder: req.body.purpose,
+       folder: req.query.purpose || "post",
       resource_type: isVideo ? "video" : "image",
       allowed_formats: isVideo
         ? ["mp4", "mkv"]

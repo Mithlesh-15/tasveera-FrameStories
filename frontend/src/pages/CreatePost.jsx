@@ -52,15 +52,18 @@ export default function CreatePost() {
       payload.append("media", postData.fileLink);
       payload.append("type", postData.fileType);
       payload.append("caption", postData.caption);
-      payload.append("purpose", "Post");
 
-      const response = await axios.post("/api/v1/post/upload", payload, {
-        withCredentials: true, // cookie ke liye (JWT)
-      });
+      const response = await axios.post(
+        "/api/v1/post/upload?purpose=posts",
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.data.success) {
         setMessage(response.data.message);
-        navigate("/profile/me");
+        navigate(`/profile/${response.data.data.owner}`);
       } else {
         setMessage(response.data.message);
       }
