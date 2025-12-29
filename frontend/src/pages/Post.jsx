@@ -1,24 +1,47 @@
-import React from 'react'
-import PostCard from '../components/PostCard'
+import React, { useEffect, useState } from "react";
+import PostCard from "../components/PostCard";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 function Post() {
-     const data = {
-    profilePhoto:
-      "https://images.pexels.com/photos/260024/pexels-photo-260024.jpeg",
-    authorName: "Raja Sahab",
-    follow: false,
-    fileLink:
-      "https://images.pexels.com/photos/1912176/pexels-photo-1912176.jpeg",
-    like: false,
-    likeCount: 4987548987,
-    caption: "kuch to hai",
-    fileType: "image",
+  const { postid } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    profilePhoto: null,
+    authorName: null,
+    follow: null,
+    fileLink: null,
+    like: null,
+    likeCount: null,
+    caption: null,
+    fileType: null,
+  });
+
+  const bringPost = async () => {
+    try {
+      const response = await axios.post("/api/v1/post/show-one-post", {postid});
+
+    if (!response.data.success) {
+      navigate("/");
+      console.log(response.data)
+      return;
+    }
+
+    // seedha backend ka data set kar
+    setData(response.data.data);
+  } catch (error) {
+    console.log("Bring Post Error:", error);
+    navigate("/");
+  }
   };
+  useEffect(() => {
+    bringPost();
+  });
   return (
     <>
-    <PostCard data={data}/>
+      <PostCard data={data} />
     </>
-  )
+  );
 }
 
-export default Post
+export default Post;

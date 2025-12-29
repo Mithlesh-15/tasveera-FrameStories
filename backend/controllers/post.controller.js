@@ -46,17 +46,18 @@ export const createPost = async (req, res) => {
 };
 
 export const showOnePost = async (req, res) => {
+  
   try {
-    const { postId } = req.body;
+    const { postid } = req.body;
 
-    if (!postId) {
+    if (!postid) {
       return res.status(400).json({
         success: false,
         message: "Post Id not received",
       });
     }
 
-    const post = await Post.findById(postId)
+    const post = await Post.findById(postid)
       .populate("owner", "username profilePhoto");
 
     if (!post) {
