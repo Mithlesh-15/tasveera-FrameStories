@@ -14,13 +14,12 @@ export const createPost = async (req, res) => {
     // cloudinary data
     const mediaUrl = req.file.path;
 
-
     // create post in DB
     const post = await Post.create({
-        owner:req.userId,
-        dataLink:mediaUrl,
-        type:req.body.type,
-        caption: req.body.caption || "",
+      owner: req.userId,
+      dataLink: mediaUrl,
+      type: req.body.type,
+      caption: req.body.caption || "",
     });
 
     //  push post id into user.posts
@@ -29,7 +28,6 @@ export const createPost = async (req, res) => {
       { $push: { posts: post._id } },
       { new: true }
     );
-
 
     // success response
     return res.status(201).json({
@@ -40,6 +38,49 @@ export const createPost = async (req, res) => {
   } catch (error) {
     console.error("Create Post Error:", error);
 
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const showOnePost = async (req, res) => {
+  try {
+    const { postId } = req.body;
+
+    if (!postId) {
+      return res.status(400).json({
+        success: false,
+        message: "Post Id not received",
+      });
+    }
+
+    const post = await Post.findById(postId)
+      .populate("owner", "username profilePhoto");
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        profilePhoto: post.owner.profilePhoto,
+        authorName: post.owner.username,
+        follow: false,
+        fileLink: post.dataLink,
+        like: false,
+        likeCount: 0,
+        caption: post.caption,
+        fileType: post.type,
+      },
+    });
+  } catch (error) {
+    console.error("Show One Post Error:", error);
     return res.status(500).json({
       success: false,
       message: "Something went wrong",
