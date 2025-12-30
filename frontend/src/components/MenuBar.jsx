@@ -9,11 +9,13 @@ import {
   User,
   LogOut,
 } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logout from "../utils/logout";
+import axios from "axios";
 
 export default function MenuBar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
 
   const [strokeWidth, setStrokeWidth] = useState({
@@ -50,6 +52,19 @@ export default function MenuBar() {
       strokeWidth: "create",
     },
   ];
+
+  const goToProfilePage = async () => {
+    try {
+      const response = await axios.get("/api/v1/get-my-details");
+      if (!response.data.data.userid) {
+        navigate("/login");
+      }
+      navigate(`/profile/${response.data.data.userid}`)
+    } catch (error) {
+      console.error(error);
+      navigate("/login");
+    }
+  };
 
   useEffect(() => {
     const path = location.pathname;
@@ -127,13 +142,13 @@ export default function MenuBar() {
             </NavLink>
           ))}
 
-          <NavLink
-            to="/profile/0"
+          <button
+            onClick={goToProfilePage}
             className="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <User size={24} strokeWidth={strokeWidth.profile} />
             <span className="text-base font-normal">Profile</span>
-          </NavLink>
+          </button>
         </nav>
 
         <div className="absolute bottom-4 left-4 right-4">
@@ -200,12 +215,12 @@ export default function MenuBar() {
             <PlusSquare size={28} strokeWidth={strokeWidth.create} />
           </NavLink>
 
-          <NavLink
-            to="/profile/0"
+          <button
+            onClick={goToProfilePage}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <User size={28} strokeWidth={strokeWidth.profile} />
-          </NavLink>
+          </button>
         </nav>
       </div>
     </>
