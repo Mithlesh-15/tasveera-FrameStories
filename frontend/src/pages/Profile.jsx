@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { Heart, MessageCircle, Bookmark, Grid, User, Menu } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import logout from "../utils/logout";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function InstagramProfile() {
+  const param = useParams();
+  const navigate = useNavigate();
+
   const [owner, setOwner] = useState(true);
   const [following, setFollowing] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState("")
+  const [username, setUsername] = useState("")
+  const [fullname, setfullname] = useState("")
+  const [bio, setBio] = useState("")
+  const [followingNumber, setFollowingNumber] = useState(null)
+  const [followersNumber, setFollowersNumber] = useState(null)
 
   const handleFollow = () => setFollowing(!following);
 
@@ -54,7 +65,35 @@ export default function InstagramProfile() {
     },
   ];
 
- 
+  const getPost = () => {}
+  const data = async () => {
+    try {
+      const { profileid } = param;
+      const response = await axios.post(
+        "/api/v1/profile/get-profile-details",
+        {profileid}
+      );
+      if (!response.data) {
+        navigate("/");
+      }
+      console.log(response.data)
+      setOwner(response.data.owner)
+      setProfilePhoto(response.data.data.profilePhoto)
+      setUsername(response.data.data.username)
+      setBio(response.data.data.bio)
+      setfullname(response.data.data.fullName)
+      setFollowingNumber(response.data.data.following.length)
+      setFollowersNumber(response.data.data.followers.length)
+      getPost()
+    } catch (error) {
+      console.error(error);
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    data();
+  });
 
   return (
     <div className="min-h-screen bg-white">
@@ -66,7 +105,7 @@ export default function InstagramProfile() {
             <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-linear-to-tr from-cyan-600 via-blue-600 to-violet-600 p-1">
               <div className="w-full h-full rounded-full bg-white p-1">
                 <img
-                  src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=200&h=200&fit=crop"
+                  src={profilePhoto}
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -80,7 +119,7 @@ export default function InstagramProfile() {
               {/* Username and Actions */}
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-lg md:text-xl font-normal">
-                  sportskeedacricket
+                  {username}
                 </h2>
               </div>
 
@@ -88,10 +127,16 @@ export default function InstagramProfile() {
               <div className="flex gap-2">
                 {owner ? (
                   <>
-                    <Link to="/update-profile" className="flex-1 bg-gray-200 hover:bg-blue-200 text-black font-semibold py-2 px-4 rounded-lg transition text-sm text-center">
+                    <Link
+                      to="/update-profile"
+                      className="flex-1 bg-gray-200 hover:bg-blue-200 text-black font-semibold py-2 px-4 rounded-lg transition text-sm text-center"
+                    >
                       Edit Profile
                     </Link>
-                    <button className="flex-1 bg-gray-200 hover:bg-red-300 text-red-500 font-semibold py-2 px-4 rounded-lg transition text-sm" onClick={logout}>
+                    <button
+                      className="flex-1 bg-gray-200 hover:bg-red-300 text-red-500 font-semibold py-2 px-4 rounded-lg transition text-sm"
+                      onClick={logout}
+                    >
                       Logout
                     </button>
                   </>
@@ -108,11 +153,10 @@ export default function InstagramProfile() {
                       {following ? "Following" : "Follow"}
                     </button>
                     <button className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg transition">
-                  <User className="w-5 h-5" />
-                </button>
+                      <User className="w-5 h-5" />
+                    </button>
                   </>
                 )}
-                
               </div>
 
               {/* Stats - Desktop */}
@@ -121,10 +165,10 @@ export default function InstagramProfile() {
                   <span className="font-semibold">88,245</span> posts
                 </div>
                 <div>
-                  <span className="font-semibold">1M</span> followers
+                  <span className="font-semibold">{followersNumber}</span> followers
                 </div>
                 <div>
-                  <span className="font-semibold">455</span> following
+                  <span className="font-semibold">{followingNumber}</span> following
                 </div>
               </div>
             </div>
@@ -139,11 +183,11 @@ export default function InstagramProfile() {
               <div className="text-gray-500 text-sm">posts</div>
             </div>
             <div>
-              <div className="font-semibold">1M</div>
+              <div className="font-semibold">{followersNumber}</div>
               <div className="text-gray-500 text-sm">followers</div>
             </div>
             <div>
-              <div className="font-semibold">455</div>
+              <div className="font-semibold">{followingNumber}</div>
               <div className="text-gray-500 text-sm">following</div>
             </div>
           </div>
@@ -151,9 +195,9 @@ export default function InstagramProfile() {
 
         {/* Bio */}
         <div className="mb-6">
-          <h3 className="font-semibold mb-1">Sportskeeda Cricket</h3>
+          <h3 className="font-semibold mb-1">{fullname}</h3>
           <p className="text-sm">
-            Download CricRocket for fastest cricket live scores & updates 🏏
+            {bio}
           </p>
         </div>
 

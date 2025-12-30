@@ -61,9 +61,8 @@ export default function MenuBar() {
       }
       navigate(`/profile/${response.data.data}`)
     } catch (error) {
-      console.log("response")
       console.error(error);
-      // navigate("/login");
+      navigate("/login");
     }
   };
 
