@@ -27,7 +27,7 @@ const router = createBrowserRouter(
         <Route path="/search" element={<Search />} />
         <Route path="/create" element={<CreatePost />} />
         <Route path="/videos" element={<Videos />} />
-        <Route path="/profile/:userid" element={<Profile />} />
+        <Route path="/profile/:profileid" element={<Profile />} />
         <Route path="/post/:postid" element={<Post />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
       </Route>
