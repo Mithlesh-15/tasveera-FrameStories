@@ -55,14 +55,15 @@ export default function MenuBar() {
 
   const goToProfilePage = async () => {
     try {
-      const response = await axios.get("/api/v1/get-my-details");
-      if (!response.data.data.userid) {
+      const response = await axios.get("/api/v1/profile/get-my-details");
+      if (!response.data.data) {
         navigate("/login");
       }
-      navigate(`/profile/${response.data.data.userid}`)
+      navigate(`/profile/${response.data.data}`)
     } catch (error) {
+      console.log("response")
       console.error(error);
-      navigate("/login");
+      // navigate("/login");
     }
   };
 
