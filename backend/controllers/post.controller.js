@@ -46,7 +46,6 @@ export const createPost = async (req, res) => {
 };
 
 export const showOnePost = async (req, res) => {
-  
   try {
     const { postid } = req.body;
 
@@ -57,8 +56,10 @@ export const showOnePost = async (req, res) => {
       });
     }
 
-    const post = await Post.findById(postid)
-      .populate("owner", "username profilePhoto");
+    const post = await Post.findById(postid).populate(
+      "owner",
+      "username profilePhoto"
+    );
 
     if (!post) {
       return res.status(404).json({
@@ -66,10 +67,11 @@ export const showOnePost = async (req, res) => {
         message: "Post not found",
       });
     }
-
+    const bool = req.userId == post.owner._id;
     return res.status(200).json({
       success: true,
       data: {
+        id: post.owner._id,
         profilePhoto: post.owner.profilePhoto,
         authorName: post.owner.username,
         follow: false,
@@ -78,6 +80,7 @@ export const showOnePost = async (req, res) => {
         likeCount: 0,
         caption: post.caption,
         fileType: post.type,
+        owner : bool
       },
     });
   } catch (error) {

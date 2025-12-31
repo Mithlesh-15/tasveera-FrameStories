@@ -11,55 +11,55 @@ export default function InstagramProfile() {
 
   const [owner, setOwner] = useState(true);
   const [following, setFollowing] = useState(false);
-  const [profilePhoto, setProfilePhoto] = useState("https://i.pinimg.com/736x/83/bc/8b/83bc8b88cf6bc4b4e04d153a418cde62.jpg")
-  const [username, setUsername] = useState("")
-  const [fullname, setfullname] = useState("")
-  const [bio, setBio] = useState("")
-  const [followingNumber, setFollowingNumber] = useState(null)
-  const [followersNumber, setFollowersNumber] = useState(null)
-  const [posts, setPosts] = useState([])
+  const [profilePhoto, setProfilePhoto] = useState(
+    "https://i.pinimg.com/736x/83/bc/8b/83bc8b88cf6bc4b4e04d153a418cde62.jpg"
+  );
+  const [username, setUsername] = useState("");
+  const [fullname, setfullname] = useState("");
+  const [bio, setBio] = useState("");
+  const [followingNumber, setFollowingNumber] = useState(null);
+  const [followersNumber, setFollowersNumber] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   const handleFollow = () => setFollowing(!following);
 
   const getPost = async (postids) => {
-  try {
-    const post = await Promise.all(
-      postids.map(async (onePostId) => {
-        const response = await axios.post(
-          "/api/v1/profile/get-one-post",
-          { onePostId }
-        );
-
-        return {
-          id: response.data.data.id,
-          image: response.data.data.image,
-        };
-      })
-    );
-
-    setPosts(post);
-  } catch (error) {
-    console.error(error);
-  }
-};
+    try {
+      const post = await Promise.all(
+        postids.map(async (onePostId) => {
+          const response = await axios.post("/api/v1/profile/get-one-post", {
+            onePostId,
+          });
+          return {
+            id: response.data.data.id,
+            image: response.data.data.image
+          };
+        })
+      );
+      if (post != []) {
+        setPosts(post);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const data = async () => {
     try {
       const { profileid } = param;
-      const response = await axios.post(
-        "/api/v1/profile/get-profile-details",
-        {profileid}
-      );
+      const response = await axios.post("/api/v1/profile/get-profile-details", {
+        profileid,
+      });
       if (!response.data) {
         navigate("/");
       }
-      setOwner(response.data.owner)
-      setProfilePhoto(response.data.data.profilePhoto)
-      setUsername(response.data.data.username)
-      setBio(response.data.data.bio)
-      setfullname(response.data.data.fullName)
-      setFollowingNumber(response.data.data.following.length)
-      setFollowersNumber(response.data.data.followers.length)
-      getPost(response.data.data.posts)
+      setOwner(response.data.owner);
+      setProfilePhoto(response.data.data.profilePhoto);
+      setUsername(response.data.data.username);
+      setBio(response.data.data.bio);
+      setfullname(response.data.data.fullName);
+      setFollowingNumber(response.data.data.following.length);
+      setFollowersNumber(response.data.data.followers.length);
+      getPost(response.data.data.posts);
     } catch (error) {
       console.error(error);
       navigate("/");
@@ -68,7 +68,7 @@ export default function InstagramProfile() {
 
   useEffect(() => {
     data();
-  },[]);
+  });
 
   return (
     <div className="min-h-screen bg-white">
@@ -93,9 +93,7 @@ export default function InstagramProfile() {
             <div className="flex flex-col gap-4">
               {/* Username and Actions */}
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-lg md:text-xl font-normal">
-                  {username}
-                </h2>
+                <h2 className="text-lg md:text-xl font-normal">{username}</h2>
               </div>
 
               {/* Action Buttons */}
@@ -140,10 +138,12 @@ export default function InstagramProfile() {
                   <span className="font-semibold">{posts.length}</span> posts
                 </div>
                 <div>
-                  <span className="font-semibold">{followersNumber}</span> followers
+                  <span className="font-semibold">{followersNumber}</span>{" "}
+                  followers
                 </div>
                 <div>
-                  <span className="font-semibold">{followingNumber}</span> following
+                  <span className="font-semibold">{followingNumber}</span>{" "}
+                  following
                 </div>
               </div>
             </div>
@@ -171,9 +171,7 @@ export default function InstagramProfile() {
         {/* Bio */}
         <div className="mb-6">
           <h3 className="font-semibold mb-1">{fullname}</h3>
-          <p className="text-sm">
-            {bio}
-          </p>
+          <p className="text-sm">{bio}</p>
         </div>
 
         {/* Posts Grid */}

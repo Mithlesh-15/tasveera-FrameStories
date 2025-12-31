@@ -6,7 +6,7 @@ import isAuthorized from '../middleware/isAuthorized.js';
 const router = express.Router();
 
 router.post("/upload",isAuthorized,upload.single("media"),createPost)
-router.post("/show-one-post",showOnePost)
+router.post("/show-one-post",isAuthorized,showOnePost)
 
 
 export default router;

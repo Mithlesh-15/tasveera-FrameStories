@@ -7,6 +7,7 @@ function Post() {
   const { postid } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({
+    id : null,
     profilePhoto: null,
     authorName: null,
     follow: null,
@@ -15,6 +16,7 @@ function Post() {
     likeCount: null,
     caption: null,
     fileType: null,
+    owber:true
   });
 
   const bringPost = async () => {

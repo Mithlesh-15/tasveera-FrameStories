@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Heart, EllipsisVertical } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function PostCard({ data }) {
   let {
+    id,
     profilePhoto,
     authorName,
     follow,
@@ -11,6 +13,7 @@ export default function PostCard({ data }) {
     likeCount,
     caption,
     fileType,
+    owner
   } = data;
   const videoref = useRef(null);
   const [liked, setLiked] = useState(like);
@@ -34,17 +37,16 @@ export default function PostCard({ data }) {
       setFollowed(true);
     }
   };
-  const togglePause = () =>{
-    if(fileType === "image") return;
-    if(pause){
-      videoref.current.play()
+  const togglePause = () => {
+    if (fileType === "image") return;
+    if (pause) {
+      videoref.current.play();
       setPause(false);
+    } else {
+      videoref.current.pause();
+      setPause(true);
     }
-    else{
-      videoref.current.pause()
-      setPause(true)
-    }
-  }
+  };
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
@@ -58,21 +60,22 @@ export default function PostCard({ data }) {
             />
           </div>
 
-          <span className="font-semibold text-xs sm:text-sm truncate">
+          <Link to={`/profile/${id}`} className="font-semibold text-xs sm:text-sm truncate">
             {authorName}
-          </span>
-
-          <button onClick={toggleFollow} className="ml-auto shrink-0">
-            {!followed ? (
-              <span className="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm px-3 sm:px-6 py-1 sm:py-1.5 rounded-lg transition-colors inline-block">
-                Follow
-              </span>
-            ) : (
-              <span className="bg-white hover:bg-gray-200 text-black border border-black font-semibold text-xs sm:text-sm px-3 sm:px-6 py-1 sm:py-1.5 rounded-lg transition-colors inline-block">
-                Unfollow
-              </span>
-            )}
-          </button>
+          </Link>
+          {owner ? null : (
+            <button onClick={toggleFollow} className="ml-auto shrink-0">
+              {!followed ? (
+                <span className="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm px-3 sm:px-6 py-1 sm:py-1.5 rounded-lg transition-colors inline-block">
+                  Follow
+                </span>
+              ) : (
+                <span className="bg-white hover:bg-gray-200 text-black border border-black font-semibold text-xs sm:text-sm px-3 sm:px-6 py-1 sm:py-1.5 rounded-lg transition-colors inline-block">
+                  Unfollow
+                </span>
+              )}
+            </button>
+          )}
         </div>
         <button className="text-gray-600 ml-2 shrink-0">
           <EllipsisVertical className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -137,7 +140,7 @@ export default function PostCard({ data }) {
       {/* Caption */}
       <div className="px-3 sm:px-4 pb-3 sm:pb-4">
         <p className="text-xs sm:text-sm flex gap-2">
-          <span className="font-semibold shrink-0">rvcjinsta</span>
+          <span className="font-semibold shrink-0">{authorName}</span>
           <span className="wrap-break-words">{caption}</span>
         </p>
       </div>
