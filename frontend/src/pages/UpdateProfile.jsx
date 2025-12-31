@@ -43,13 +43,12 @@ export default function UpdateProfile() {
 
     try {
       if (
-        !postData.profilePhoto ||
-        !postData.username ||
-        postData.bio.trim() === "" ||
+        !postData.profilePhoto &&
+        !postData.username &&
+        postData.bio.trim() === "" &&
         postData.fullName.trim() === ""
       ) {
-        setMessage("Please fill all fields");
-        setLoading(false);
+        navigate(`/`);
         return;
       }
 

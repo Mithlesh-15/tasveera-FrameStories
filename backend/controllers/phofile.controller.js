@@ -71,7 +71,7 @@ export const getPostForProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.userId;
-    const { username, bio , fullName } = req.body;
+    const { username, bio, fullName } = req.body;
 
     // Find current user
     const user = await User.findById(userId);
@@ -87,7 +87,7 @@ export const updateProfile = async (req, res) => {
       const existingUser = await User.findOne({ username });
 
       if (existingUser) {
-        return res.status(400).json({
+        return res.json({
           success: false,
           message: "Username already taken",
         });
@@ -97,9 +97,11 @@ export const updateProfile = async (req, res) => {
     }
 
     // Update bio if provided
-    if (bio !== undefined || fullName !== undefined) {
+    if (bio !== "") {
       user.bio = bio;
-      user.fullName = fullName
+    }
+    if (fullName !== "") {
+      user.fullName = fullName;
     }
 
     // Update profile photo if file exists
@@ -118,7 +120,7 @@ export const updateProfile = async (req, res) => {
         username: user.username,
         bio: user.bio,
         profilePhoto: user.profilePhoto,
-        fullname : user.fullName
+        fullname: user.fullName,
       },
     });
   } catch (error) {
