@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { User, Image, Save, Loader, Mail, AtSign } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function UpdateProfile() {
   const location = useLocation();
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+  const [postData, setPostData] = useState({
     profilePhoto: null,
     username: "",
     bio: "",
@@ -17,7 +19,7 @@ export default function UpdateProfile() {
   const handleFileChange = (e, fieldName) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, [fieldName]: file }));
+      setPostData((prev) => ({ ...prev, [fieldName]: file }));
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviews((prev) => ({ ...prev, [fieldName]: reader.result }));
@@ -27,10 +29,11 @@ export default function UpdateProfile() {
   };
 
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setPostData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -38,14 +41,41 @@ export default function UpdateProfile() {
     setLoading(true);
 
     try {
-      if (formData.username === "" || formData.email === "") {
-        alert("Please Fill All Required Fields");
+      if (
+        !postData.profilePhoto ||
+        !postData.username ||
+        postData.bio.trim() === ""
+      ) {
+        setMessage("Please fill all fields");
         setLoading(false);
         return;
       }
-      // Your API call here
+
+      // REAL FormData
+      const payload = new FormData();
+      payload.append("media", postData.profilePhoto);
+      payload.append("username", postData.username);
+      payload.append("bio", postData.bio);
+
+      const response = await axios.post(
+        "/api/v1/profile/update-profile?purpose=profile-photo",
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        setMessage(response.data.message);
+        navigate(`/profile/${response.data.data.owner}`);
+      } else {
+        setMessage(response.data.message);
+      }
+
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setMessage(error.message);
       setLoading(false);
     }
   };
@@ -116,9 +146,7 @@ export default function UpdateProfile() {
                   />
                 </label>
               </div>
-              <p className="text-xs text-slate-400 mt-2">
-                PNG, JPG up to 1MB
-              </p>
+              <p className="text-xs text-slate-400 mt-2">PNG, JPG up to 1MB</p>
             </div>
 
             <div>
@@ -126,19 +154,17 @@ export default function UpdateProfile() {
                 Username <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <AtSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <AtSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-800" />
                 <input
                   type="text"
                   name="username"
-                  value={formData.username}
+                  value={postData.username}
                   onChange={handleInputChange}
                   placeholder="Enter your username"
-                  className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500"
+                  className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800"
                 />
               </div>
             </div>
-
-            
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -146,17 +172,17 @@ export default function UpdateProfile() {
               </label>
               <textarea
                 name="bio"
-                value={formData.bio}
+                value={postData.bio}
                 onChange={handleInputChange}
                 placeholder="Tell us about yourself..."
                 rows="4"
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-500"
+                className="w-full px-4 py-3 border border-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-800"
               />
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-800 mt-1">
                 Maximum 50 characters
               </p>
             </div>
-
+            <p className="text-red-500 text-center font-bold">{message}</p>
             {loading ? (
               <button
                 className="w-full bg-blue-300 hover:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-no-drop"

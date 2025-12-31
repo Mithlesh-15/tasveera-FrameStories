@@ -37,7 +37,7 @@ export const getProfileDetail = async (req, res) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: error.message ,
+      message: error.message,
     });
   }
 };
@@ -56,19 +56,17 @@ export const getPostForProfile = async (req, res) => {
       success: true,
       message: "post found",
       data: {
-        id : postDetail._id,
-        image : postDetail.dataLink
+        id: postDetail._id,
+        image: postDetail.dataLink,
       },
     });
   } catch (error) {
     return res.json({
       success: false,
-      message: error.message ,
+      message: error.message,
     });
   }
 };
-
-import User from "../models/user.model.js";
 
 export const updateProfile = async (req, res) => {
   try {
@@ -115,6 +113,7 @@ export const updateProfile = async (req, res) => {
       success: true,
       message: "Profile updated successfully",
       data: {
+        owner: userId,
         username: user.username,
         bio: user.bio,
         profilePhoto: user.profilePhoto,
@@ -129,4 +128,3 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
-
