@@ -231,7 +231,7 @@ export default function CreatePost() {
                 className="w-full bg-blue-300 hover:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-no-drop"
                 disabled
               >
-                <Loader className="w-5 h-5" />
+                <Loader className="w-5 h-5 animate-spin" />
                 <span>Loading...</span>
               </button>
             ) : (
