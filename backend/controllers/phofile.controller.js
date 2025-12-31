@@ -67,3 +67,66 @@ export const getPostForProfile = async (req, res) => {
     });
   }
 };
+
+import User from "../models/user.model.js";
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { username, bio } = req.body;
+
+    // Find current user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // If username is being updated, check uniqueness
+    if (username && username !== user.username) {
+      const existingUser = await User.findOne({ username });
+
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Username already taken",
+        });
+      }
+
+      user.username = username;
+    }
+
+    // Update bio if provided
+    if (bio !== undefined) {
+      user.bio = bio;
+    }
+
+    // Update profile photo if file exists
+    if (req.file) {
+      user.profilePhoto = req.file.path; // cloud URL
+    }
+
+    // Save updated user
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: {
+        username: user.username,
+        bio: user.bio,
+        profilePhoto: user.profilePhoto,
+      },
+    });
+  } catch (error) {
+    console.error("Update Profile Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while updating profile",
+    });
+  }
+};
+
