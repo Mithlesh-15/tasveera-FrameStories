@@ -11,61 +11,37 @@ export default function InstagramProfile() {
 
   const [owner, setOwner] = useState(true);
   const [following, setFollowing] = useState(false);
-  const [profilePhoto, setProfilePhoto] = useState("")
+  const [profilePhoto, setProfilePhoto] = useState("https://i.pinimg.com/736x/83/bc/8b/83bc8b88cf6bc4b4e04d153a418cde62.jpg")
   const [username, setUsername] = useState("")
   const [fullname, setfullname] = useState("")
   const [bio, setBio] = useState("")
   const [followingNumber, setFollowingNumber] = useState(null)
   const [followersNumber, setFollowersNumber] = useState(null)
+  const [posts, setPosts] = useState([])
 
   const handleFollow = () => setFollowing(!following);
 
-  const posts = [
-    {
-      id: 1,
-      image:
-        "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=400&h=400&fit=crop",
-      likes: "45.2K",
-      comments: "892",
-    },
-    {
-      id: 2,
-      image:
-        "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=400&h=400&fit=crop",
-      likes: "52.8K",
-      comments: "1.2K",
-    },
-    {
-      id: 3,
-      image:
-        "https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?w=400&h=400&fit=crop",
-      likes: "38.9K",
-      comments: "756",
-    },
-    {
-      id: 4,
-      image:
-        "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=400&h=400&fit=crop",
-      likes: "41.3K",
-      comments: "643",
-    },
-    {
-      id: 5,
-      image:
-        "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=400&h=400&fit=crop",
-      likes: "49.7K",
-      comments: "981",
-    },
-    {
-      id: 6,
-      image:
-        "https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?w=400&h=400&fit=crop",
-      likes: "44.1K",
-      comments: "834",
-    },
-  ];
+  const getPost = async (postids) => {
+  try {
+    const post = await Promise.all(
+      postids.map(async (onePostId) => {
+        const response = await axios.post(
+          "/api/v1/profile/get-one-post",
+          { onePostId }
+        );
 
-  const getPost = () => {}
+        return {
+          id: response.data.data.id,
+          image: response.data.data.image,
+        };
+      })
+    );
+
+    setPosts(post);
+  } catch (error) {
+    console.error(error);
+  }
+};
   const data = async () => {
     try {
       const { profileid } = param;
@@ -76,7 +52,6 @@ export default function InstagramProfile() {
       if (!response.data) {
         navigate("/");
       }
-      console.log(response.data)
       setOwner(response.data.owner)
       setProfilePhoto(response.data.data.profilePhoto)
       setUsername(response.data.data.username)
@@ -84,7 +59,7 @@ export default function InstagramProfile() {
       setfullname(response.data.data.fullName)
       setFollowingNumber(response.data.data.following.length)
       setFollowersNumber(response.data.data.followers.length)
-      getPost()
+      getPost(response.data.data.posts)
     } catch (error) {
       console.error(error);
       navigate("/");
@@ -93,7 +68,7 @@ export default function InstagramProfile() {
 
   useEffect(() => {
     data();
-  });
+  },[]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -162,7 +137,7 @@ export default function InstagramProfile() {
               {/* Stats - Desktop */}
               <div className="hidden md:flex gap-8">
                 <div>
-                  <span className="font-semibold">88,245</span> posts
+                  <span className="font-semibold">{posts.length}</span> posts
                 </div>
                 <div>
                   <span className="font-semibold">{followersNumber}</span> followers
@@ -179,7 +154,7 @@ export default function InstagramProfile() {
         <div className="md:hidden border-t border-b py-3 mb-4">
           <div className="flex justify-around text-center">
             <div>
-              <div className="font-semibold">88,245</div>
+              <div className="font-semibold">{posts.length}</div>
               <div className="text-gray-500 text-sm">posts</div>
             </div>
             <div>

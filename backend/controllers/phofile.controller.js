@@ -1,3 +1,4 @@
+import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 
 export const getMyProfile = (req, res) => {
@@ -36,7 +37,33 @@ export const getProfileDetail = async (req, res) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: error,
+      message: error.message ,
+    });
+  }
+};
+
+export const getPostForProfile = async (req, res) => {
+  try {
+    const { onePostId } = req.body;
+    const postDetail = await Post.findById(onePostId);
+    if (!postDetail) {
+      return res.json({
+        success: false,
+        message: "User does not exist",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "post found",
+      data: {
+        id : postDetail._id,
+        image : postDetail.dataLink
+      },
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message ,
     });
   }
 };
