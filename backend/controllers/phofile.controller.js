@@ -71,7 +71,7 @@ export const getPostForProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.userId;
-    const { username, bio } = req.body;
+    const { username, bio , fullName } = req.body;
 
     // Find current user
     const user = await User.findById(userId);
@@ -97,8 +97,9 @@ export const updateProfile = async (req, res) => {
     }
 
     // Update bio if provided
-    if (bio !== undefined) {
+    if (bio !== undefined || fullName !== undefined) {
       user.bio = bio;
+      user.fullName = fullName
     }
 
     // Update profile photo if file exists
@@ -117,6 +118,7 @@ export const updateProfile = async (req, res) => {
         username: user.username,
         bio: user.bio,
         profilePhoto: user.profilePhoto,
+        fullname : user.fullName
       },
     });
   } catch (error) {

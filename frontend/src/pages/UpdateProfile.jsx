@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { User, Image, Save, Loader, Mail, AtSign } from "lucide-react";
+import { User, Image, Save, Loader, IdCard, AtSign } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ export default function UpdateProfile() {
     profilePhoto: null,
     username: "",
     bio: "",
+    fullName: "",
   });
 
   const [previews, setPreviews] = useState({
@@ -44,7 +45,8 @@ export default function UpdateProfile() {
       if (
         !postData.profilePhoto ||
         !postData.username ||
-        postData.bio.trim() === ""
+        postData.bio.trim() === "" ||
+        postData.fullName.trim() === ""
       ) {
         setMessage("Please fill all fields");
         setLoading(false);
@@ -56,6 +58,7 @@ export default function UpdateProfile() {
       payload.append("media", postData.profilePhoto);
       payload.append("username", postData.username);
       payload.append("bio", postData.bio);
+      payload.append("fullName", postData.fullName);
 
       const response = await axios.post(
         "/api/v1/profile/update-profile?purpose=profile-photo",
@@ -161,6 +164,22 @@ export default function UpdateProfile() {
                   value={postData.username}
                   onChange={handleInputChange}
                   placeholder="Enter your username"
+                  className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Full Name <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <IdCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-800" />
+                <input
+                  type="text"
+                  name="fullName"
+                  value={postData.fullName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your Name"
                   className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800"
                 />
               </div>
