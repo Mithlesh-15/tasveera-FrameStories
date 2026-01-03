@@ -80,4 +80,35 @@ export const isFollowed = async (req, res, next) => {
   }
 };
 
+export const isLike = async (req, res, next) => {
+  try {
 
+    const user = await User.findById(req.userId).select("likedPosts");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const postId = req.body?.postid;
+
+    if (!postId) {
+      req.like = false;
+      return next();
+    }
+
+    req.like = user.likedPosts
+      .map(id => String(id))
+      .includes(String(postId));
+
+    next();
+  } catch (error) {
+    console.error("isLike middleware error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
