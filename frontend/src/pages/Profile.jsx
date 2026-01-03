@@ -10,7 +10,7 @@ export default function InstagramProfile() {
   const navigate = useNavigate();
 
   const [owner, setOwner] = useState(true);
-  const [following, setFollowing] = useState(false);
+  const [following, setFollowing] = useState(true);
   const [profilePhoto, setProfilePhoto] = useState(
     "https://i.pinimg.com/736x/83/bc/8b/83bc8b88cf6bc4b4e04d153a418cde62.jpg"
   );
@@ -60,6 +60,7 @@ export default function InstagramProfile() {
       setFollowingNumber(response.data.data.following.length);
       setFollowersNumber(response.data.data.followers.length);
       getPost(response.data.data.posts);
+      setFollowing(response.data.followed)
     } catch (error) {
       console.error(error);
       navigate("/");
@@ -68,7 +69,7 @@ export default function InstagramProfile() {
 
   useEffect(() => {
     data();
-  });
+  },[]);
 
   return (
     <div className="min-h-screen bg-white">

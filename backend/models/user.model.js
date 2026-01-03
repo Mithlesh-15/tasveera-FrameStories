@@ -55,6 +55,15 @@ const userSchema = new Schema(
       ],
       default: [],
     },
+    followers: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Post",
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true }
 );

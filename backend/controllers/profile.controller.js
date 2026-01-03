@@ -32,6 +32,7 @@ export const getProfileDetail = async (req, res) => {
       message: "user found",
       data: profileDetail,
       owner: req.owner,
+      followed : req.followed
     });
   } catch (error) {
     return res.json({

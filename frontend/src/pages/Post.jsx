@@ -16,7 +16,7 @@ function Post() {
     likeCount: null,
     caption: null,
     fileType: null,
-    owber:true
+    owner:true
   });
 
   const bringPost = async () => {
@@ -28,8 +28,6 @@ function Post() {
       console.log(response.data)
       return;
     }
-
-    // seedha backend ka data set kar
     setData(response.data.data);
   } catch (error) {
     console.log("Bring Post Error:", error);
@@ -38,7 +36,7 @@ function Post() {
   };
   useEffect(() => {
     bringPost();
-  });
+  },[]);
   return (
     <>
       <PostCard data={data} />

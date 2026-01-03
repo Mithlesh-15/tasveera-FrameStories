@@ -67,7 +67,7 @@ export const showOnePost = async (req, res) => {
         message: "Post not found",
       });
     }
-    const bool = req.userId == post.owner._id;
+    console.log(req.followed)
     return res.status(200).json({
       success: true,
       data: {
@@ -80,7 +80,7 @@ export const showOnePost = async (req, res) => {
         likeCount: 0,
         caption: post.caption,
         fileType: post.type,
-        owner : bool
+        owner: req.owner,
       },
     });
   } catch (error) {
