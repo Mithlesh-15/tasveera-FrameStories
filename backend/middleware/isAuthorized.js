@@ -19,7 +19,6 @@ const isAuthorized = (req, res, next) => {
 
     // 4. attach userId to request
     req.userId = decoded.userId;
-
     next();
   } catch (error) {
     return res.status(401).json({

@@ -27,12 +27,11 @@ export const getProfileDetail = async (req, res) => {
         message: "User does not exist",
       });
     }
-    const bool = req.userId == profileid;
     return res.json({
       success: true,
       message: "user found",
       data: profileDetail,
-      owner: bool,
+      owner: req.owner,
     });
   } catch (error) {
     return res.json({

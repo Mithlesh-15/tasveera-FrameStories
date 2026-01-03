@@ -5,13 +5,14 @@ import {
   getPostForProfile,
   getProfileDetail,
   updateProfile,
-} from "../controllers/phofile.controller.js";
+} from "../controllers/profile.controller.js";
 import upload from "../middleware/upload.js";
+import isOwner from "../middleware/isCheak.js";
 
 const router = express.Router();
 
 router.get("/get-my-details", isAuthorized, getMyProfile);
-router.post("/get-profile-details", isAuthorized, getProfileDetail);
+router.post("/get-profile-details", isAuthorized, isOwner, getProfileDetail);
 router.post("/get-one-post", getPostForProfile);
 router.post(
   "/update-profile",
@@ -19,6 +20,5 @@ router.post(
   upload.single("media"),
   updateProfile
 );
-
 
 export default router;
