@@ -67,7 +67,7 @@ export const showOnePost = async (req, res) => {
         message: "Post not found",
       });
     }
-    console.log(req.followed)
+    console.log(req.followed);
     return res.status(200).json({
       success: true,
       data: {
@@ -90,4 +90,12 @@ export const showOnePost = async (req, res) => {
       message: "Something went wrong",
     });
   }
+};
+
+export const givingInfo = (req, res) => {
+  return res.json({
+    like: req.like,
+    followed: req.followed,
+    owner: req.owner,
+  });
 };

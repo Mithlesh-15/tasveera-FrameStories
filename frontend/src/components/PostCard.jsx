@@ -1,24 +1,25 @@
 import React, { useRef, useState } from "react";
 import { Heart, EllipsisVertical } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function PostCard({ data }) {
   let {
+    PostId,
     id,
     profilePhoto,
     authorName,
-    follow,
     fileLink,
-    like,
     likeCount,
     caption,
     fileType,
-    owner
   } = data;
   const videoref = useRef(null);
-  const [liked, setLiked] = useState(like);
+  const [liked, setLiked] = useState(false);
   const [pause, setPause] = useState(false);
-  const [followed, setFollowed] = useState(follow);
+  const [followed, setFollowed] = useState(false);
+  const [owner, setOwner] = useState(false);
   const [likeCountState, setLikeCountState] = useState(likeCount);
   const toggleLike = () => {
     if (liked) {
@@ -37,6 +38,7 @@ export default function PostCard({ data }) {
       setFollowed(true);
     }
   };
+
   const togglePause = () => {
     if (fileType === "image") return;
     if (pause) {
@@ -47,6 +49,23 @@ export default function PostCard({ data }) {
       setPause(true);
     }
   };
+
+  const getInfo = async () => {
+    try {
+      const response = await axios.post("/api/v1/post/is-like-follow-owner", {
+        profileid: id,
+        PostId,
+      });
+      setLiked(response.data.like);
+      setFollowed(response.data.followed);
+      setOwner(response.data.owner);
+    } catch (error) {
+      console.log("Post Card Error:", error);
+    }
+  };
+  useEffect(() => {
+    getInfo();
+  },[]);
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
@@ -60,7 +79,10 @@ export default function PostCard({ data }) {
             />
           </div>
 
-          <Link to={`/profile/${id}`} className="font-semibold text-xs sm:text-sm truncate">
+          <Link
+            to={`/profile/${id}`}
+            className="font-semibold text-xs sm:text-sm truncate"
+          >
             {authorName}
           </Link>
           {owner ? null : (

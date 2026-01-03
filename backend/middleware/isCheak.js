@@ -2,8 +2,8 @@ import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 
 const ExtractUseIdFromPost = async (req) => {
-  if (req.body.postid) {
-    const post = await Post.findById(req.body.postid).select("owner");
+  if (req.body.PostId) {
+    const post = await Post.findById(req.body.PostId).select("owner");
 
     if (!post) {
       return null;
@@ -52,7 +52,7 @@ export const isFollowed = async (req, res, next) => {
     }
 
     const user = await User.findById(req.userId).select("following");
-  
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -61,14 +61,13 @@ export const isFollowed = async (req, res, next) => {
     }
 
     const givenId = await givingUserId(req);
-
     if (!givenId) {
       req.followed = false;
       return next();
     }
 
     req.followed = user.following
-      .map(id => String(id))
+      .map((id) => String(id))
       .includes(String(givenId));
     next();
   } catch (error) {
@@ -82,7 +81,6 @@ export const isFollowed = async (req, res, next) => {
 
 export const isLike = async (req, res, next) => {
   try {
-
     const user = await User.findById(req.userId).select("likedPosts");
 
     if (!user) {
@@ -92,17 +90,14 @@ export const isLike = async (req, res, next) => {
       });
     }
 
-    const postId = req.body?.postid;
+    const postId = req.body?.PostId;
 
     if (!postId) {
       req.like = false;
       return next();
     }
 
-    req.like = user.likedPosts
-      .map(id => String(id))
-      .includes(String(postId));
-
+    req.like = user.likedPosts.map((id) => String(id)).includes(String(postId));
     next();
   } catch (error) {
     console.error("isLike middleware error:", error);

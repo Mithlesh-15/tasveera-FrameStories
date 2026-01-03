@@ -5,20 +5,18 @@ import axios from "axios";
 
 function Post() {
   const { postid } = useParams();
+  
   const navigate = useNavigate();
   const [data, setData] = useState({
+    PostId:postid,
     id : null,
     profilePhoto: null,
     authorName: null,
-    follow: null,
     fileLink: null,
-    like: null,
     likeCount: null,
     caption: null,
     fileType: null,
-    owner:true
   });
-
   const bringPost = async () => {
     try {
       const response = await axios.post("/api/v1/post/show-one-post", {postid});
