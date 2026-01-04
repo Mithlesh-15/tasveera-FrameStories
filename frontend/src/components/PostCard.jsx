@@ -21,6 +21,8 @@ export default function PostCard({ data }) {
   const [followed, setFollowed] = useState(false);
   const [owner, setOwner] = useState(false);
   const [likeCountState, setLikeCountState] = useState(likeCount);
+  const [disable, setDisable] = useState(false);
+
   const toggleLike = () => {
     if (liked) {
       setLiked(false);
@@ -28,14 +30,6 @@ export default function PostCard({ data }) {
     } else {
       setLiked(true);
       setLikeCountState(likeCountState + 1);
-    }
-  };
-
-  const toggleFollow = () => {
-    if (followed) {
-      setFollowed(false);
-    } else {
-      setFollowed(true);
     }
   };
 
@@ -63,9 +57,35 @@ export default function PostCard({ data }) {
       console.log("Post Card Error:", error);
     }
   };
+
+  const handleFollow = async () => {
+    const profileId = id;
+    if (!profileId || disable) return;
+    setDisable(true);
+
+    try {
+      const endpoint = followed
+        ? "/api/v1/action/unfollow"
+        : "/api/v1/action/follow";
+      console.log(endpoint);
+
+      const { data } = await axios.post(endpoint, { profileId });
+
+      if (data.success) {
+        setFollowed((prev) => !prev);
+        console.log("Success:", data.message);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
+      console.error("Follow/Unfollow error:", errorMessage);
+    } finally {
+      setDisable(false);
+    }
+  };
   useEffect(() => {
     getInfo();
-  },[]);
+  }, []);
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
@@ -86,7 +106,11 @@ export default function PostCard({ data }) {
             {authorName}
           </Link>
           {owner ? null : (
-            <button onClick={toggleFollow} className="ml-auto shrink-0">
+            <button
+              onClick={handleFollow}
+              disabled={disable}
+              className="ml-auto shrink-0"
+            >
               {!followed ? (
                 <span className="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm px-3 sm:px-6 py-1 sm:py-1.5 rounded-lg transition-colors inline-block">
                   Follow
