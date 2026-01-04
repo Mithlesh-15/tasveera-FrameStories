@@ -170,3 +170,56 @@ export const likePost = async (req, res) => {
     });
   }
 };
+export const dislikePost = async (req, res) => {
+  try {
+    const currentUserId = req.userId;
+    const { postId } = req.body;
+
+    if (!postId) {
+      return res.status(400).json({
+        success: false,
+        message: "Post ID is required",
+      });
+    }
+
+    const currentUser = await User.findById(currentUserId);
+    const post = await Post.findById(postId);
+
+    if (!currentUser || !post) {
+      return res.status(404).json({
+        success: false,
+        message: "User or Post not found",
+      });
+    }
+
+    if (!currentUser.likedPosts.includes(postId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Post already disliked",
+      });
+    }
+
+    post.likes -= 1;
+    currentUser.likedPosts.push(postId);
+    currentUser.likedPosts = currentUser.likedPosts.filter(
+      (id) => id.toString() !== postId
+    );
+    await post.save();
+    await currentUser.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully disliked the post",
+      data: {
+        likes: post.likes,
+        likedPosts: currentUser.likedPosts,
+      },
+    });
+  } catch (error) {
+    console.error("disLike post error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};

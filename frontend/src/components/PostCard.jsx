@@ -15,6 +15,7 @@ export default function PostCard({ data }) {
     caption,
     fileType,
   } = data;
+  
   const videoref = useRef(null);
   const [liked, setLiked] = useState(false);
   const [pause, setPause] = useState(false);
@@ -23,8 +24,6 @@ export default function PostCard({ data }) {
   const [likeCountState, setLikeCountState] = useState(likeCount);
   const [disableFollow, setDisableFollow] = useState(false);
   const [disableLike, setDisableLike] = useState(false)
-
-
   const togglePause = () => {
     if (fileType === "image") return;
     if (pause) {
@@ -78,14 +77,12 @@ export default function PostCard({ data }) {
   };
 
   const handleLike = async () => {
-    console.log("-> " + PostId)
     if (!PostId || disableLike) return;
     setDisableLike(true);
     try {
       const endpoint = liked
         ? "/api/v1/action/dislike"
         : "/api/v1/action/like";
-      console.log(endpoint);
 
       const { data } = await axios.post(endpoint, { postId:PostId });
 
@@ -106,6 +103,7 @@ export default function PostCard({ data }) {
   useEffect(() => {
   if (!PostId || !id) return;
   getInfo();
+  setLikeCountState(likeCount)
 }, [PostId, id]);
 
   return (

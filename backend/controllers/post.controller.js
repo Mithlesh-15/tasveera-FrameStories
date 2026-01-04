@@ -77,7 +77,7 @@ export const showOnePost = async (req, res) => {
         follow: false,
         fileLink: post.dataLink,
         like: false,
-        likeCount: 0,
+        likeCount: post.likes,
         caption: post.caption,
         fileType: post.type,
         owner: req.owner,
