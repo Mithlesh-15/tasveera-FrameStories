@@ -31,6 +31,7 @@ export default function InstagramProfile() {
       const endpoint = following
         ? "/api/v1/action/unfollow"
         : "/api/v1/action/follow";
+        console.log(endpoint)
 
       const { data } = await axios.post(endpoint, { profileId });
 
