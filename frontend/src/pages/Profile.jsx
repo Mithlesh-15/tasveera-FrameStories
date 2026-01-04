@@ -20,8 +20,32 @@ export default function InstagramProfile() {
   const [followingNumber, setFollowingNumber] = useState(null);
   const [followersNumber, setFollowersNumber] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [disable, setDisable] = useState(false);
 
-  const handleFollow = () => setFollowing(!following);
+  const handleFollow = async () => {
+    const profileId = param.profileid;
+    if (!profileId || disable) return;
+    setDisable(true);
+
+    try {
+      const endpoint = following
+        ? "/api/v1/action/unfollow"
+        : "/api/v1/action/follow";
+
+      const { data } = await axios.post(endpoint, { profileId });
+
+      if (data.success) {
+        setFollowing((prev) => !prev);
+        console.log("Success:", data.message);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
+      console.error("Follow/Unfollow error:", errorMessage);
+    } finally {
+      setDisable(false);
+    }
+  };
 
   const getPost = async (postids) => {
     try {
@@ -32,7 +56,7 @@ export default function InstagramProfile() {
           });
           return {
             id: response.data.data.id,
-            image: response.data.data.image
+            image: response.data.data.image,
           };
         })
       );
@@ -60,7 +84,7 @@ export default function InstagramProfile() {
       setFollowingNumber(response.data.data.following.length);
       setFollowersNumber(response.data.data.followers.length);
       getPost(response.data.data.posts);
-      setFollowing(response.data.followed)
+      setFollowing(response.data.followed);
     } catch (error) {
       console.error(error);
       navigate("/");
@@ -69,7 +93,7 @@ export default function InstagramProfile() {
 
   useEffect(() => {
     data();
-  },[]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -118,6 +142,7 @@ export default function InstagramProfile() {
                   <>
                     <button
                       onClick={handleFollow}
+                      disabled={disable}
                       className={`flex-1 font-semibold py-2 px-4 rounded-lg transition text-sm ${
                         following
                           ? "bg-gray-200 hover:bg-gray-300 text-black"
