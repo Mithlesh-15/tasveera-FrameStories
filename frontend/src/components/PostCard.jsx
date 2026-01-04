@@ -21,17 +21,9 @@ export default function PostCard({ data }) {
   const [followed, setFollowed] = useState(false);
   const [owner, setOwner] = useState(false);
   const [likeCountState, setLikeCountState] = useState(likeCount);
-  const [disable, setDisable] = useState(false);
+  const [disableFollow, setDisableFollow] = useState(false);
+  const [disableLike, setDisableLike] = useState(false)
 
-  const toggleLike = () => {
-    if (liked) {
-      setLiked(false);
-      setLikeCountState(likeCountState - 1);
-    } else {
-      setLiked(true);
-      setLikeCountState(likeCountState + 1);
-    }
-  };
 
   const togglePause = () => {
     if (fileType === "image") return;
@@ -46,6 +38,7 @@ export default function PostCard({ data }) {
 
   const getInfo = async () => {
     try {
+      
       const response = await axios.post("/api/v1/post/is-like-follow-owner", {
         profileid: id,
         PostId,
@@ -60,8 +53,8 @@ export default function PostCard({ data }) {
 
   const handleFollow = async () => {
     const profileId = id;
-    if (!profileId || disable) return;
-    setDisable(true);
+    if (!profileId || disableFollow) return;
+    setDisableFollow(true);
 
     try {
       const endpoint = followed
@@ -80,12 +73,41 @@ export default function PostCard({ data }) {
         error.response?.data?.message || "Something went wrong";
       console.error("Follow/Unfollow error:", errorMessage);
     } finally {
-      setDisable(false);
+      setDisableFollow(false);
     }
   };
+
+  const handleLike = async () => {
+    console.log("-> " + PostId)
+    if (!PostId || disableLike) return;
+    setDisableLike(true);
+    try {
+      const endpoint = liked
+        ? "/api/v1/action/dislike"
+        : "/api/v1/action/like";
+      console.log(endpoint);
+
+      const { data } = await axios.post(endpoint, { postId:PostId });
+
+      if (data.success) {
+        setLiked((prev) => !prev);
+        setLikeCountState(data.data.likes)
+        console.log("Success:", data.message);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
+      console.error("Follow/Unfollow error:", errorMessage);
+    } finally {
+      setDisableLike(false);
+    }
+  };
+
   useEffect(() => {
-    getInfo();
-  }, []);
+  if (!PostId || !id) return;
+  getInfo();
+}, [PostId, id]);
+
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
@@ -108,7 +130,7 @@ export default function PostCard({ data }) {
           {owner ? null : (
             <button
               onClick={handleFollow}
-              disabled={disable}
+              disabled={disableFollow}
               className="ml-auto shrink-0"
             >
               {!followed ? (
@@ -166,7 +188,7 @@ export default function PostCard({ data }) {
 
       {/* Action Buttons */}
       <div className="flex items-center gap-3 sm:gap-5 p-3 sm:p-4">
-        <button onClick={toggleLike} className="hover:text-gray-600 shrink-0">
+        <button onClick={handleLike} disabled={disableLike} className="hover:text-gray-600 shrink-0">
           {liked ? (
             <Heart
               size={24}

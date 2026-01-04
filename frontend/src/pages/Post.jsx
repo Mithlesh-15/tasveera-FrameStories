@@ -5,11 +5,10 @@ import axios from "axios";
 
 function Post() {
   const { postid } = useParams();
-  
   const navigate = useNavigate();
   const [data, setData] = useState({
-    PostId:postid,
-    id : null,
+    PostId: null,
+    id: null,
     profilePhoto: null,
     authorName: null,
     fileLink: null,
@@ -19,27 +18,33 @@ function Post() {
   });
   const bringPost = async () => {
     try {
-      const response = await axios.post("/api/v1/post/show-one-post", {postid});
+      const response = await axios.post("/api/v1/post/show-one-post", {
+        postid,
+      });
 
-    if (!response.data.success) {
+      if (!response.data.success) {
+        navigate("/");
+        console.log(response.data);
+        return;
+      }
+      setData(response.data.data);
+      setData((prev) => ({
+        ...prev,
+        PostId: postid,
+      }));
+    } catch (error) {
+      console.log("Bring Post Error:", error);
       navigate("/");
-      console.log(response.data)
-      return;
     }
-    setData(response.data.data);
-  } catch (error) {
-    console.log("Bring Post Error:", error);
-    navigate("/");
-  }
   };
   useEffect(() => {
-    bringPost();
-  },[]);
-  return (
-    <>
-      <PostCard data={data} />
-    </>
-  );
+    if (postid) {
+      bringPost();
+    }
+  }, []);
+  return <>
+  <PostCard data={data} />
+  </>;
 }
 
 export default Post;

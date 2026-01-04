@@ -37,6 +37,7 @@ export default function InstagramProfile() {
 
       if (data.success) {
         setFollowing((prev) => !prev);
+        setFollowersNumber(data.data.followers.length)
         console.log("Success:", data.message);
       }
     } catch (error) {
