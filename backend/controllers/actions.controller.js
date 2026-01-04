@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
+import Post from "../models/post.model.js";
 
 export const unfollowUser = async (req, res) => {
   try {
@@ -111,6 +112,58 @@ export const followUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Follow error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export const likePost = async (req, res) => {
+  try {
+    const currentUserId = req.userId;
+    const { postId } = req.body;
+
+    if (!postId) {
+      return res.status(400).json({
+        success: false,
+        message: "Post ID is required",
+      });
+    }
+
+    const currentUser = await User.findById(currentUserId);
+    const post = await Post.findById(postId);
+
+    if (!currentUser || !post) {
+      return res.status(404).json({
+        success: false,
+        message: "User or Post not found",
+      });
+    }
+
+    if (currentUser.likedPosts.includes(postId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Post already liked",
+      });
+    }
+
+    post.likes += 1;
+    currentUser.likedPosts.push(postId);
+
+    await post.save();
+    await currentUser.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully liked the post",
+      data: {
+        likes: post.likes,
+        likedPosts: currentUser.likedPosts,
+      },
+    });
+  } catch (error) {
+    console.error("Like post error:", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
