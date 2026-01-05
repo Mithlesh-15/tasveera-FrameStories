@@ -61,10 +61,14 @@ function SearchPageLayout() {
 
         <div className="flex-1 overflow-y-auto scrollbar-hide">
           {users.length == 0 ? (
-            <div className="text-center text-gray-500 text-sm">No Result</div>
+            <div className="text-center text-gray-500 text-sm ">No Result</div>
           ) : (
             users.map((item) => (
-              <div key={item._id} onClick={() => profileClick(item._id)}>
+              <div
+                key={item._id}
+                onClick={() => profileClick(item._id)}
+                className="cursor-pointer"
+              >
                 <UserProfileCard
                   username={item.username}
                   imageUrl={item.profilePhoto}
