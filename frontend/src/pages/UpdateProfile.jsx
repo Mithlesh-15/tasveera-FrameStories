@@ -33,9 +33,29 @@ export default function UpdateProfile() {
   const [message, setMessage] = useState(null);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPostData((prev) => ({ ...prev, [name]: value }));
-  };
+  const { name, value } = e.target;
+
+  // Apply special rules only for the username field
+  if (name === "username") {
+    const cleanedValue = value
+      .toLowerCase()              // convert to lowercase
+      .replace(/\s/g, "")         // remove all spaces
+      .replace(/[^a-z0-9_]/g, ""); // allow only letters, numbers, and underscores
+
+    setPostData((prev) => ({
+      ...prev,
+      username: cleanedValue,
+    }));
+    return;
+  }
+
+  // Update other fields normally
+  setPostData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -166,6 +186,9 @@ export default function UpdateProfile() {
                   className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800"
                 />
               </div>
+              <p className="text-xs text-slate-500 mt-1">
+                Username can only contain letters, numbers, and underscores.
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">

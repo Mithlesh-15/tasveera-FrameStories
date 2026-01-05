@@ -171,8 +171,18 @@ function SignUp() {
               placeholder="Username"
               className="w-full px-3 py-2 mb-2 text-xs border border-gray-300 rounded-sm focus:ring-0 focus:border-gray-500 bg-gray-50 placeholder-gray-500"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value
+                  .toLowerCase()
+                  .replace(/\s/g, "")
+                  .replace(/[^a-z0-9_]/g, "");
+
+                setUsername(value);
+              }}
             />
+            <p className="text-[10px] text-red-500 mb-2">
+              Username can only contain letters, numbers, and underscores.
+            </p>
             <input
               type="password"
               placeholder="Password"

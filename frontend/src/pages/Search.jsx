@@ -9,7 +9,7 @@ function SearchPageLayout() {
   const nevigate = useNavigate();
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
-  
+
   const profileClick = (userid) => {
     nevigate(`/profile/${userid}`);
   };
@@ -22,10 +22,7 @@ function SearchPageLayout() {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await axios.get(
-          `/api/v1/action/search?input=${query}`
-        );
-console.log(res.data.data)
+        const res = await axios.get(`/api/v1/action/search?input=${query}`);
         setUsers(res.data.data);
       } catch (err) {
         console.log(err);
@@ -52,7 +49,7 @@ console.log(res.data.data)
             type="text"
             placeholder="Search"
             value={query}
-        onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             className="bg-transparent w-full focus:outline-none text-base placeholder-gray-500 px-3"
           />
         </div>
@@ -68,7 +65,10 @@ console.log(res.data.data)
           ) : (
             users.map((item) => (
               <div key={item._id} onClick={() => profileClick(item._id)}>
-                <UserProfileCard username={item.username} imageUrl={item.profilePhoto} />
+                <UserProfileCard
+                  username={item.username}
+                  imageUrl={item.profilePhoto}
+                />
               </div>
             ))
           )}
