@@ -1,22 +1,39 @@
-import React from "react";
-import { Search } from "lucide-react";
-import UserProfileCard from "../components/UserProfileCard";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
+import axios from "axios";
+import UserProfileCard from "../components/UserProfileCard";
 import "../utils/scrollBarHide.css";
 
 function SearchPageLayout() {
   const nevigate = useNavigate();
-  const arr = [
-    {
-      _id: 1,
-      name: "kj",
-      picture:
-        "https://images.pexels.com/photos/33517042/pexels-photo-33517042.jpeg",
-    },
-  ];
+  const [query, setQuery] = useState("");
+  const [users, setUsers] = useState([]);
+  
   const profileClick = (userid) => {
     nevigate(`/profile/${userid}`);
   };
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setUsers([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await axios.get(
+          `/api/v1/action/search?input=${query}`
+        );
+console.log(res.data.data)
+        setUsers(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }, 500); // debounce delay
+
+    return () => clearTimeout(timer);
+  }, [query]);
 
   return (
     <div className="max-h-[85vh] bg-white flex flex-col">
@@ -34,6 +51,8 @@ function SearchPageLayout() {
           <input
             type="text"
             placeholder="Search"
+            value={query}
+        onChange={(e) => setQuery(e.target.value)}
             className="bg-transparent w-full focus:outline-none text-base placeholder-gray-500 px-3"
           />
         </div>
@@ -44,12 +63,12 @@ function SearchPageLayout() {
         <h3 className="text-base font-semibold mb-4">Result</h3>
 
         <div className="flex-1 overflow-y-auto scrollbar-hide">
-          {arr.length == 0 ? (
+          {users.length == 0 ? (
             <div className="text-center text-gray-500 text-sm">No Result</div>
           ) : (
-            arr.map((item) => (
+            users.map((item) => (
               <div key={item._id} onClick={() => profileClick(item._id)}>
-                <UserProfileCard username={item.name} imageUrl={item.picture} />
+                <UserProfileCard username={item.username} imageUrl={item.profilePhoto} />
               </div>
             ))
           )}
