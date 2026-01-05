@@ -4,6 +4,7 @@ import {
   dislikePost,
   followUser,
   likePost,
+  searchUsers,
   unfollowUser,
 } from "../controllers/actions.controller.js";
 
@@ -13,5 +14,6 @@ router.post("/unfollow", isAuthorized, unfollowUser);
 router.post("/follow", isAuthorized, followUser);
 router.post("/like", isAuthorized, likePost);
 router.post("/dislike", isAuthorized, dislikePost);
+router.get("/search", isAuthorized, searchUsers);
 
 export default router;

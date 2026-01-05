@@ -223,3 +223,45 @@ export const dislikePost = async (req, res) => {
     });
   }
 };
+
+export const searchUsers = async (req, res) => {
+  try {
+    const { input } = req.query;
+
+    // basic validation
+    if (!input || !input.trim()) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+      });
+    }
+
+    const query = input.trim();
+
+    const searchConditions = [];
+
+    // search by username (partial, case-insensitive)
+    searchConditions.push({
+      username: { $regex: query, $options: "i" },
+    });
+
+    
+
+    const users = await User.find({
+      $or: searchConditions
+    })
+      .select("_id username profilePhoto")
+      .limit(10)
+      .lean();
+    return res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    console.error("searchUsers error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
