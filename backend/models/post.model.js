@@ -34,6 +34,10 @@ const postSchema = new Schema(
       default: "",
       maxlength: 50,
     },
+    thumbnail: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

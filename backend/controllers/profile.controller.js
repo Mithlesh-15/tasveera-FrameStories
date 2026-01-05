@@ -57,7 +57,7 @@ export const getPostForProfile = async (req, res) => {
       message: "post found",
       data: {
         id: postDetail._id,
-        image: postDetail.dataLink,
+        image: postDetail.thumbnail,
       },
     });
   } catch (error) {

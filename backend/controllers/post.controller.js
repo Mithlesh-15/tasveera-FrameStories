@@ -1,5 +1,6 @@
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
+import cloudinary from "../lib/cloudinaryConfig.js";
 
 export const createPost = async (req, res) => {
   try {
@@ -14,12 +15,29 @@ export const createPost = async (req, res) => {
     // cloudinary data
     const mediaUrl = req.file.path;
 
+    const publicId = req.file.filename; // cloudinary public_id
+    const isVideo = req.file.mimetype.startsWith("video");
+    // default thumbnail (image case)
+    let thumbnail = mediaUrl;
+
+    // generate thumbnail for video
+    if (isVideo) {
+      thumbnail = cloudinary.url(publicId, {
+        resource_type: "video",
+        format: "jpg",
+        transformation: [
+          { start_offset: "1" }, // 1 second frame
+        ],
+      });
+    }
+
     // create post in DB
     const post = await Post.create({
       owner: req.userId,
       dataLink: mediaUrl,
       type: req.body.type,
       caption: req.body.caption || "",
+      thumbnail
     });
 
     //  push post id into user.posts
