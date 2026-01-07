@@ -3,14 +3,22 @@ import axios from "axios";
 import PostCard from "../components/PostCard";
 
 function Home() {
+  // All loaded posts
   const [posts, setPosts] = useState([]);
+
+  // Whether more posts are available
   const [hasMore, setHasMore] = useState(true);
 
+  // Bottom div for infinite scroll trigger
   const observerRef = useRef(null);
-  const isFetchingRef = useRef(false);
-  const pageRef = useRef(1); // 🔥 page as ref (no re-render)
 
-  // 🔥 Fetch posts (stable + safe)
+  // Prevents multiple API calls at once
+  const isFetchingRef = useRef(false);
+
+  // Current page number (no re-render on change)
+  const pageRef = useRef(1);
+
+  // Fetch next page of posts
   const fetchPosts = useCallback(async () => {
     if (isFetchingRef.current || !hasMore) return;
 
@@ -24,53 +32,48 @@ function Home() {
 
       const newPosts = res.data?.data || [];
 
+      // Add only new posts (avoid duplicates)
       setPosts((prev) => {
-        const existingIds = new Set(prev.map((p) => p._id));
-        const uniquePosts = newPosts.filter((p) => !existingIds.has(p._id));
-        return [...prev, ...uniquePosts];
+        const ids = new Set(prev.map((p) => p._id));
+        const unique = newPosts.filter((p) => !ids.has(p._id));
+        return [...prev, ...unique];
       });
 
-      if (newPosts.length < 6) {
-        setHasMore(false);
-      } else {
-        pageRef.current += 1; // 🔥 next page
-      }
-    } catch (error) {
-      console.error("Feed fetch error:", error);
+      // If less than limit, no more data
+      if (newPosts.length < 6) setHasMore(false);
+      else pageRef.current += 1;
+    } catch (err) {
+      console.error("Feed error:", err);
     }
+
     isFetchingRef.current = false;
   }, [hasMore]);
 
-  // 🔹 First load
+  // First load
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  // 🔹 Smooth Intersection Observer (NO lag)
+  // Infinite scroll observer
   useEffect(() => {
     if (!observerRef.current || !hasMore) return;
 
-    let timeoutId = null;
+    let timer = null;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !isFetchingRef.current) {
-          timeoutId = setTimeout(() => {
-            fetchPosts();
-          }, 150); // 🔥 throttle
+          timer = setTimeout(fetchPosts, 500); // small throttle
         }
       },
-      {
-        rootMargin: "300px", // 🔥 prefetch early
-        threshold: 0,
-      }
+      { rootMargin: "300px" }
     );
 
     observer.observe(observerRef.current);
 
     return () => {
       observer.disconnect();
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timer) clearTimeout(timer);
     };
   }, [fetchPosts, hasMore]);
 
@@ -85,13 +88,14 @@ function Home() {
             profilePhoto: post.owner.profilePhoto,
             authorName: post.owner.username,
             fileLink: post.dataLink,
-            likeCount: post.likes, // 🔥 correct count
+            likeCount: post.likes,
             caption: post.caption,
             fileType: post.type,
           }}
         />
       ))}
 
+      {/* Trigger point for loading more posts */}
       {hasMore && <div ref={observerRef} className="h-2" />}
     </div>
   );

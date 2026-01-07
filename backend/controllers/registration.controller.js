@@ -72,6 +72,7 @@ export const signup = async (req, res) => {
       fullName,
       username,
       password: hashedPassword,
+      profilePhoto : process.env.DEFAULT_PROFILE_PIC
     });
 
     await newUser.save();

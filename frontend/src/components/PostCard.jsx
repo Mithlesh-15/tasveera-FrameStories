@@ -171,7 +171,7 @@ export default function PostCard({ data }) {
               />
 
               {pause && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 pointer-events-none">
+                <div className="absolute inset-0 flex items-center justify-center bg-opacity-30 pointer-events-none">
                   <svg
                     className="w-16 h-16 text-white"
                     fill="currentColor"
