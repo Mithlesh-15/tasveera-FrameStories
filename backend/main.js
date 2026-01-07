@@ -5,6 +5,7 @@ import registrationRoute from "./routes/registration.route.js"
 import PostRoute from "./routes/post.route.js"
 import ProfileRoute from "./routes/profile.route.js"
 import ActionRoute from "./routes/actions.route.js"
+import feedRoutes from "./routes/feed.route.js";
 import cookieParser from "cookie-parser";
 dotenv.config({path:"./.env"});
 
@@ -23,6 +24,7 @@ app.use("/api/v1/registration",registrationRoute)
 app.use("/api/v1/post",PostRoute)
 app.use("/api/v1/profile",ProfileRoute)
 app.use("/api/v1/action",ActionRoute)
+app.use("/api/v1/feed",feedRoutes)
 
 
 app.listen(port, () => {

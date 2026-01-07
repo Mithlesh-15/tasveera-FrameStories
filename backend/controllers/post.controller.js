@@ -85,7 +85,6 @@ export const showOnePost = async (req, res) => {
         message: "Post not found",
       });
     }
-    console.log(req.followed);
     return res.status(200).json({
       success: true,
       data: {
