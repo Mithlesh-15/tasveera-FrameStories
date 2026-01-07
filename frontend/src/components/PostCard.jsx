@@ -159,15 +159,29 @@ export default function PostCard({ data }) {
           }
         >
           {fileType === "video" ? (
-            <video
-              src={fileLink}
-              ref={videoref}
-              autoPlay
-              loop
-              className="w-full h-full object-cover"
-              controlsList="nodownload"
-              onContextMenu={(e) => e.preventDefault()}
-            />
+            <div className="relative w-full h-full">
+              <video
+                src={fileLink}
+                ref={videoref}
+                autoPlay
+                loop
+                className="w-full h-full object-cover"
+                controlsList="nodownload"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+
+              {pause && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 pointer-events-none">
+                  <svg
+                    className="w-16 h-16 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              )}
+            </div>
           ) : (
             <img
               src={fileLink}
