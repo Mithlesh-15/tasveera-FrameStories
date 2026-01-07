@@ -103,6 +103,33 @@ export default function PostCard({ data }) {
     setLikeCountState(likeCount);
   }, [PostId, id]);
 
+  useEffect(() => {
+  if (fileType !== "video" || !videoref.current) return;
+
+  const videoEl = videoref.current;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        videoEl.play().catch(() => {});
+        setPause(false);
+      } else {
+        videoEl.pause();
+        setPause(true);
+      }
+    },
+    {
+      threshold: 0.8, // at least 60% visible to play
+    }
+  );
+
+  observer.observe(videoEl);
+
+  return () => {
+    observer.unobserve(videoEl);
+  };
+}, [fileType]);
+
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
@@ -154,7 +181,7 @@ export default function PostCard({ data }) {
           className="w-full bg-gray-100"
           style={
             fileType === "video"
-              ? { aspectRatio: "16/9" }
+              ? { aspectRatio: "1/1" }
               : { aspectRatio: "1/1" }
           }
         >
@@ -163,7 +190,6 @@ export default function PostCard({ data }) {
               <video
                 src={fileLink}
                 ref={videoref}
-                autoPlay
                 loop
                 className="w-full h-full object-cover"
                 controlsList="nodownload"
