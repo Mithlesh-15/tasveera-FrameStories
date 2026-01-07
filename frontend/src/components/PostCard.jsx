@@ -15,7 +15,7 @@ export default function PostCard({ data }) {
     caption,
     fileType,
   } = data;
-  
+
   const videoref = useRef(null);
   const [liked, setLiked] = useState(false);
   const [pause, setPause] = useState(false);
@@ -23,7 +23,7 @@ export default function PostCard({ data }) {
   const [owner, setOwner] = useState(false);
   const [likeCountState, setLikeCountState] = useState(likeCount);
   const [disableFollow, setDisableFollow] = useState(false);
-  const [disableLike, setDisableLike] = useState(false)
+  const [disableLike, setDisableLike] = useState(false);
   const togglePause = () => {
     if (fileType === "image") return;
     if (pause) {
@@ -37,7 +37,6 @@ export default function PostCard({ data }) {
 
   const getInfo = async () => {
     try {
-      
       const response = await axios.post("/api/v1/post/is-like-follow-owner", {
         profileid: id,
         PostId,
@@ -80,15 +79,13 @@ export default function PostCard({ data }) {
     if (!PostId || disableLike) return;
     setDisableLike(true);
     try {
-      const endpoint = liked
-        ? "/api/v1/action/dislike"
-        : "/api/v1/action/like";
+      const endpoint = liked ? "/api/v1/action/dislike" : "/api/v1/action/like";
 
-      const { data } = await axios.post(endpoint, { postId:PostId });
+      const { data } = await axios.post(endpoint, { postId: PostId });
 
       if (data.success) {
         setLiked((prev) => !prev);
-        setLikeCountState(data.data.likes)
+        setLikeCountState(data.data.likes);
         console.log("Success:", data.message);
       }
     } catch (error) {
@@ -101,10 +98,10 @@ export default function PostCard({ data }) {
   };
 
   useEffect(() => {
-  if (!PostId || !id) return;
-  getInfo();
-  setLikeCountState(likeCount)
-}, [PostId, id]);
+    if (!PostId || !id) return;
+    getInfo();
+    setLikeCountState(likeCount);
+  }, [PostId, id]);
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
@@ -168,12 +165,16 @@ export default function PostCard({ data }) {
               autoPlay
               loop
               className="w-full h-full object-cover"
+              controlsList="nodownload"
+              onContextMenu={(e) => e.preventDefault()}
             />
           ) : (
             <img
               src={fileLink}
               alt="Post"
               className="w-full h-full object-cover"
+              onContextMenu={(e) => e.preventDefault()}
+              style={{ WebkitTouchCallout: "none" }}
             />
           )}
         </div>
@@ -181,7 +182,11 @@ export default function PostCard({ data }) {
 
       {/* Action Buttons */}
       <div className="flex items-center gap-3 sm:gap-5 p-3 sm:p-4">
-        <button onClick={handleLike} disabled={disableLike} className="hover:text-gray-600 shrink-0">
+        <button
+          onClick={handleLike}
+          disabled={disableLike}
+          className="hover:text-gray-600 shrink-0"
+        >
           {liked ? (
             <Heart
               size={24}
