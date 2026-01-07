@@ -152,12 +152,7 @@ export default function PostCard({ data }) {
       <div className="bg-white">
         {/* Image/Video - 16:9 Aspect Ratio */}
         <div
-          onDoubleClick={() => {
-            if (!liked) {
-              setLiked(true);
-              setLikeCountState(likeCountState + 1);
-            }
-          }}
+          onDoubleClick={handleLike}
           onClick={togglePause}
           className="w-full bg-gray-100"
           style={
