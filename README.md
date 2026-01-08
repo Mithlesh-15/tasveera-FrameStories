@@ -99,21 +99,27 @@ This is a solo full-stack portfolio project built to strengthen real-world MERN 
 ## 🖥️ Screenshots
 
 ### Home Feed
-<img src="screenshots/tasveera-home.png" width="300" />
+<img src="screenshots/tasveera-home.png" width="800" />
 
 ### Profile Page
-<img src="screenshots/tasveera-profile.png" width="300" />
+<img src="screenshots/tasveera-profile.png" width="700" />
 
 ### Upload Post
 <img src="screenshots/tasveera-upload.png" width="300" />
 
 ### LogIn & SignUp
-<img src="screenshots/tasveera-login.png" width="300" style="margin-right:10px;" />
-<img src="screenshots/tasveera-signup.png" width="300" />
-
+<table align="center">
+  <tr>
+    <td style="padding:25px;">
+      <img src="screenshots/tasveera-signup.png" width="320" />
+    </td>
+    <td style="padding:25px;">
+      <img src="screenshots/tasveera-login.png" width="250" />
+    </td>
+  </tr>
+</table>
 ## ⚙️ Installation and Setup
 
-### Clone Repository
 ### Clone Repository
 
 ```bash
@@ -122,11 +128,8 @@ git clone https://github.com/Mithlesh-15/tasveera-FrameStories.git
 cd tasveera-FrameStories
 ```
 
-
-cd tasveera-FrameStories
-
 ### Backend Setup
-```
+```bash
 cd backend
 npm install
 npm run dev
@@ -136,7 +139,7 @@ npm run start
 Create .env using env.example.
 
 ### Frontend Setup
-```
+```bash
 cd frontend
 npm install
 npm run dev
