@@ -1,5 +1,16 @@
 # 📸 Tasveera – Frame Stories
 
+![MERN](https://img.shields.io/badge/MERN-Stack-green)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen)
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Node](https://img.shields.io/badge/Backend-Node.js-green)
+![Express](https://img.shields.io/badge/Framework-Express-black)
+![Tailwind](https://img.shields.io/badge/Style-TailwindCSS-38B2AC)
+![Cloudinary](https://img.shields.io/badge/Media-Cloudinary-blue)
+![Netlify](https://img.shields.io/badge/Frontend-Netlify-00C7B7)
+![Vercel](https://img.shields.io/badge/Backend-Vercel-black)
+
+
 ## 🚀 Project Overview
 
 Tasveera – Frame Stories is a full-stack social media web application built using the MERN stack where users can share their memories through photos and videos, follow other users, and interact with posts.
