@@ -99,21 +99,17 @@ This is a solo full-stack portfolio project built to strengthen real-world MERN 
 ## 🖥️ Screenshots
 
 ### Home Feed
-![Home Feed](screenshots/tasveera-home.png)
+<img src="screenshots/tasveera-home.png" width="300" />
 
 ### Profile Page
-![Profile Page](screenshots/tasveera-profile.png)
-
+<img src="screenshots/tasveera-profile.png" width="300" />
 
 ### Upload Post
-![Upload Post](screenshots/tasveera-upload.png)
+<img src="screenshots/tasveera-upload.png" width="300" />
 
-### LogIn
-![LogIn](screenshots/tasveera-login.png)
-
-### SignUp
-![SignUp](screenshots/tasveera-signup.png)
-
+### LogIn & SignUp
+<img src="screenshots/tasveera-login.png" width="300" style="margin-right:10px;" />
+<img src="screenshots/tasveera-signup.png" width="300" />
 
 ## ⚙️ Installation and Setup
 
