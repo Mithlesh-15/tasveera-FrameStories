@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   // All loaded posts
   const [posts, setPosts] = useState([]);
 
@@ -42,8 +44,11 @@ function Home() {
       // If less than limit, no more data
       if (newPosts.length < 6) setHasMore(false);
       else pageRef.current += 1;
-    } catch (err) {
-      console.error("Feed error:", err);
+    } catch (error) {
+      console.error("Feed error:", error);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     }
 
     isFetchingRef.current = false;

@@ -245,10 +245,8 @@ export const searchUsers = async (req, res) => {
       username: { $regex: query, $options: "i" },
     });
 
-    
-
     const users = await User.find({
-      $or: searchConditions
+      $or: searchConditions,
     })
       .select("_id username profilePhoto")
       .limit(10)

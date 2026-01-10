@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
 
   const observerRef = useRef(null);
   const isFetchingRef = useRef(false);
-  const pageRef = useRef(1); // 🔥 page as ref (no re-render)
+  const pageRef = useRef(1); //page as ref (no re-render)
 
   // 🔥 Fetch posts (stable + safe)
   const fetchPosts = useCallback(async () => {
@@ -37,6 +39,9 @@ function Home() {
       }
     } catch (error) {
       console.error("Feed fetch error:", error);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     }
     isFetchingRef.current = false;
   }, [hasMore]);
@@ -57,11 +62,11 @@ function Home() {
         if (entry.isIntersecting && !isFetchingRef.current) {
           timeoutId = setTimeout(() => {
             fetchPosts();
-          }, 150); // 🔥 throttle
+          }, 300); // throttle
         }
       },
       {
-        rootMargin: "300px", // 🔥 prefetch early
+        rootMargin: "300px", // prefetch early
         threshold: 0,
       }
     );
@@ -85,7 +90,7 @@ function Home() {
             profilePhoto: post.owner.profilePhoto,
             authorName: post.owner.username,
             fileLink: post.dataLink,
-            likeCount: post.likes, // 🔥 correct count
+            likeCount: post.likes,
             caption: post.caption,
             fileType: post.type,
           }}

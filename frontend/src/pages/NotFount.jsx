@@ -1,9 +1,8 @@
-import React from 'react';
-import { Home, ArrowLeft, Search } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Home, ArrowLeft, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function NotFound() {
-
   const handleGoBack = () => {
     window.history.back();
   };
@@ -32,7 +31,8 @@ export default function NotFound() {
               Page Not Found
             </h2>
             <p className="text-lg text-gray-600 max-w-md mx-auto">
-              The page you're looking for doesn't exist or has been moved. Let's get you back on track.
+              The page you're looking for doesn't exist or has been moved. Let's
+              get you back on track.
             </p>
           </div>
 
@@ -58,12 +58,18 @@ export default function NotFound() {
           {/* Help Text */}
           <div className="pt-8 border-t border-gray-200 max-w-md mx-auto">
             <p className="text-sm text-gray-500">
-              Need help? Contact our{' '}
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+              Need help? Contact our{" "}
+              <a
+                href="#"
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
                 support team
-              </a>
-              {' '}or visit our{' '}
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+              </a>{" "}
+              or visit our{" "}
+              <a
+                href="#"
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
                 help center
               </a>
             </p>

@@ -31,19 +31,22 @@ export default function InstagramProfile() {
       const endpoint = following
         ? "/api/v1/action/unfollow"
         : "/api/v1/action/follow";
-        console.log(endpoint)
+      console.log(endpoint);
 
       const { data } = await axios.post(endpoint, { profileId });
 
       if (data.success) {
         setFollowing((prev) => !prev);
-        setFollowersNumber(data.data.followers.length)
+        setFollowersNumber(data.data.followers.length);
         console.log("Success:", data.message);
       }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
       console.error("Follow/Unfollow error:", errorMessage);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     } finally {
       setDisable(false);
     }
@@ -67,6 +70,9 @@ export default function InstagramProfile() {
       }
     } catch (error) {
       console.error(error);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     }
   };
   const data = async () => {
@@ -89,7 +95,11 @@ export default function InstagramProfile() {
       setFollowing(response.data.followed);
     } catch (error) {
       console.error(error);
-      navigate("/");
+      if (error.status == 401) {
+        navigate("/login");
+      } else {
+        navigate("/");
+      }
     }
   };
 

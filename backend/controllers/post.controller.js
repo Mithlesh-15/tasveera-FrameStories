@@ -37,7 +37,7 @@ export const createPost = async (req, res) => {
       dataLink: mediaUrl,
       type: req.body.type,
       caption: req.body.caption || "",
-      thumbnail
+      thumbnail,
     });
 
     //  push post id into user.posts

@@ -33,29 +33,28 @@ export default function UpdateProfile() {
   const [message, setMessage] = useState(null);
 
   const handleInputChange = (e) => {
-  const { name, value } = e.target;
+    const { name, value } = e.target;
 
-  // Apply special rules only for the username field
-  if (name === "username") {
-    const cleanedValue = value
-      .toLowerCase()              // convert to lowercase
-      .replace(/\s/g, "")         // remove all spaces
-      .replace(/[^a-z0-9_]/g, ""); // allow only letters, numbers, and underscores
+    // Apply special rules only for the username field
+    if (name === "username") {
+      const cleanedValue = value
+        .toLowerCase() // convert to lowercase
+        .replace(/\s/g, "") // remove all spaces
+        .replace(/[^a-z0-9_]/g, ""); // allow only letters, numbers, and underscores
 
+      setPostData((prev) => ({
+        ...prev,
+        username: cleanedValue,
+      }));
+      return;
+    }
+
+    // Update other fields normally
     setPostData((prev) => ({
       ...prev,
-      username: cleanedValue,
+      [name]: value,
     }));
-    return;
-  }
-
-  // Update other fields normally
-  setPostData((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
-};
-
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,6 +98,9 @@ export default function UpdateProfile() {
       console.error(error);
       setMessage(error.message);
       setLoading(false);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     }
   };
 

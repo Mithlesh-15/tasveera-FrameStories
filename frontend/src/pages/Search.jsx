@@ -24,8 +24,11 @@ function SearchPageLayout() {
       try {
         const res = await axios.get(`/api/v1/action/search?input=${query}`);
         setUsers(res.data.data);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
+        if (error.status == 401) {
+          nevigate("/login");
+        }
       }
     }, 500); // debounce delay
 

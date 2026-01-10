@@ -27,7 +27,6 @@ export const getImageFeed = async (req, res) => {
   }
 };
 
-
 export const getVideoFeed = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;

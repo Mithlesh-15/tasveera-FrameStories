@@ -34,7 +34,11 @@ function Post() {
       }));
     } catch (error) {
       console.log("Bring Post Error:", error);
-      navigate("/");
+      if (error.status == 401) {
+        navigate("/login");
+      } else {
+        navigate("/");
+      }
     }
   };
   useEffect(() => {
@@ -42,9 +46,11 @@ function Post() {
       bringPost();
     }
   }, []);
-  return <>
-  <PostCard data={data} />
-  </>;
+  return (
+    <>
+      <PostCard data={data} />
+    </>
+  );
 }
 
 export default Post;

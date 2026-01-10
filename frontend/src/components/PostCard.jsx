@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Heart, EllipsisVertical } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -15,7 +15,7 @@ export default function PostCard({ data }) {
     caption,
     fileType,
   } = data;
-
+  const navigate = useNavigate();
   const videoref = useRef(null);
   const [liked, setLiked] = useState(false);
   const [pause, setPause] = useState(false);
@@ -46,6 +46,9 @@ export default function PostCard({ data }) {
       setOwner(response.data.owner);
     } catch (error) {
       console.log("Post Card Error:", error);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     }
   };
 
@@ -70,6 +73,9 @@ export default function PostCard({ data }) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
       console.error("Follow/Unfollow error:", errorMessage);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     } finally {
       setDisableFollow(false);
     }
@@ -91,7 +97,10 @@ export default function PostCard({ data }) {
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
-      console.error("Follow/Unfollow error:", errorMessage);
+      console.error("Like/Dislike error:", errorMessage);
+      if (error.status == 401) {
+        navigate("/login");
+      }
     } finally {
       setDisableLike(false);
     }
@@ -104,31 +113,31 @@ export default function PostCard({ data }) {
   }, [PostId, id]);
 
   useEffect(() => {
-  if (fileType !== "video" || !videoref.current) return;
+    if (fileType !== "video" || !videoref.current) return;
 
-  const videoEl = videoref.current;
+    const videoEl = videoref.current;
 
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        videoEl.play().catch(() => {});
-        setPause(false);
-      } else {
-        videoEl.pause();
-        setPause(true);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          videoEl.play().catch(() => {});
+          setPause(false);
+        } else {
+          videoEl.pause();
+          setPause(true);
+        }
+      },
+      {
+        threshold: 0.8, // at least 60% visible to play
       }
-    },
-    {
-      threshold: 0.8, // at least 60% visible to play
-    }
-  );
+    );
 
-  observer.observe(videoEl);
+    observer.observe(videoEl);
 
-  return () => {
-    observer.unobserve(videoEl);
-  };
-}, [fileType]);
+    return () => {
+      observer.unobserve(videoEl);
+    };
+  }, [fileType]);
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
