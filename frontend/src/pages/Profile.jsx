@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import logout from "../utils/logout";
 import { useEffect } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function InstagramProfile() {
   const param = useParams();
@@ -36,6 +37,7 @@ export default function InstagramProfile() {
       const { data } = await axios.post(endpoint, { profileId });
 
       if (data.success) {
+        toast.success(data.message);
         setFollowing((prev) => !prev);
         setFollowersNumber(data.data.followers.length);
         console.log("Success:", data.message);
@@ -44,7 +46,9 @@ export default function InstagramProfile() {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
       console.error("Follow/Unfollow error:", errorMessage);
+      toast.error(errorMessage);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       }
     } finally {
@@ -71,6 +75,7 @@ export default function InstagramProfile() {
     } catch (error) {
       console.error(error);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       }
     }
@@ -82,6 +87,7 @@ export default function InstagramProfile() {
         profileid,
       });
       if (!response.data) {
+        toast.error("Something went wrong");
         navigate("/");
       }
       setOwner(response.data.owner);
@@ -96,8 +102,10 @@ export default function InstagramProfile() {
     } catch (error) {
       console.error(error);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       } else {
+        toast.error("Something went wrong");
         navigate("/");
       }
     }

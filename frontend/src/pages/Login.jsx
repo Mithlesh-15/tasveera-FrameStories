@@ -9,6 +9,7 @@ import {
   facebookProvider,
   googleProvider,
 } from "../utils/firebaseConfig";
+import toast from "react-hot-toast";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ function Login() {
       setSuccess(response.data.success);
       if (response.data.success) {
         setMessage(response.data.message);
+        toast.success(response.data.message);
         setLoading(false);
         navigate("/");
       }
@@ -37,8 +39,10 @@ function Login() {
       return;
     } catch (error) {
       if (error.response) {
+        toast.error(error.response.data.message);
         setMessage(error.response.data.message);
       } else {
+        toast.error("Something wen wrong, Please try again");
         setMessage("Something wen wrong, Please try again");
       }
       setLoading(false);
@@ -58,6 +62,7 @@ function Login() {
       setSuccess(response.data.success);
 
       if (response.data.success) {
+        toast.success(response.data.message);
         setMessage(response.data.message);
         setLoading(false);
         navigate("/");
@@ -67,6 +72,7 @@ function Login() {
       return;
     } catch (error) {
       if (error.response) {
+        toast.error(error.response.data.message);
         setMessage(error.response.data.message);
       } else {
         setMessage("Something wen wrong, Please try again");

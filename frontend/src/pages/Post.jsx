@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 function Post() {
   const { postid } = useParams();
@@ -23,6 +24,7 @@ function Post() {
       });
 
       if (!response.data.success) {
+        toast.error(response.data.message);
         navigate("/");
         console.log(response.data);
         return;
@@ -34,7 +36,9 @@ function Post() {
       }));
     } catch (error) {
       console.log("Bring Post Error:", error);
+      toast.error(error.response.data.message);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       } else {
         navigate("/");

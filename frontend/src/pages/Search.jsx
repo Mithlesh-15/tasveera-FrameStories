@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import axios from "axios";
 import UserProfileCard from "../components/UserProfileCard";
 import "../utils/scrollBarHide.css";
+import toast from "react-hot-toast";
 
 function SearchPageLayout() {
   const nevigate = useNavigate();
@@ -27,6 +28,7 @@ function SearchPageLayout() {
       } catch (error) {
         console.log(error);
         if (error.status == 401) {
+          toast.error("Please Login First");
           nevigate("/login");
         }
       }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User, Image, Save, Loader, IdCard, AtSign } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function UpdateProfile() {
   const location = useLocation();
@@ -87,6 +88,7 @@ export default function UpdateProfile() {
       );
 
       if (response.data.success) {
+        toast.success(response.data.message);
         setMessage(response.data.message);
         navigate(`/profile/${response.data.data.owner}`);
       } else {
@@ -99,6 +101,7 @@ export default function UpdateProfile() {
       setMessage(error.message);
       setLoading(false);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       }
     }

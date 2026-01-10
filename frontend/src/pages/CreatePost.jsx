@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, Video, Send, Loader } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function CreatePost() {
   const location = useLocation();
@@ -62,6 +63,7 @@ export default function CreatePost() {
       );
 
       if (response.data.success) {
+        toast.success(response.data.message)
         setMessage(response.data.message);
         navigate(`/profile/${response.data.data.owner}`);
       } else {
@@ -71,11 +73,14 @@ export default function CreatePost() {
       setLoading(false);
     } catch (error) {
       if (error.response?.status === 401) {
+        toast.error("Please Login First")
         navigate("/login");
       }
       if (error.response) {
+        toast.error(error.response.data.message)
         setMessage(error.response.data.message);
       } else {
+        toast.error("Something went wrong, please try again")
         setMessage("Something went wrong, please try again");
       }
       setLoading(false);
@@ -86,7 +91,7 @@ export default function CreatePost() {
     const handleBeforeUnload = (e) => {
       if (loading) {
         e.preventDefault();
-        e.returnValue = ""; // Chrome ke liye required
+        e.returnValue = ""; 
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);

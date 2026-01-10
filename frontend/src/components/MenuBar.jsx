@@ -12,6 +12,7 @@ import {
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logout from "../utils/logout";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function MenuBar() {
   const location = useLocation();
@@ -56,16 +57,17 @@ export default function MenuBar() {
   const goToProfilePage = async () => {
     try {
       const response = await axios.get("/api/v1/profile/get-my-details");
-
+      console.log(response.data.message)
       if (!response.data.data) {
+        toast.error("Please Login First")
         navigate("/login");
       }
       navigate(`/profile/${response.data.data}`);
       navigate(0);
     } catch (error) {
-      console.log(error.status);
       console.error(error);
       if (error.status == 401) {
+        toast.error("Please Login First")
         navigate("/login");
       }
     }

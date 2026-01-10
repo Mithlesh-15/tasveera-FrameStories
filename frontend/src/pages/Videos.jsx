@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Home() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ function Home() {
     } catch (error) {
       console.error("Feed fetch error:", error);
       if (error.status == 401) {
+        toast.error("Please Login First")
         navigate("/login");
       }
     }

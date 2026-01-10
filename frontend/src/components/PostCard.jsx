@@ -3,6 +3,7 @@ import { Heart, EllipsisVertical } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function PostCard({ data }) {
   let {
@@ -47,6 +48,7 @@ export default function PostCard({ data }) {
     } catch (error) {
       console.log("Post Card Error:", error);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       }
     }
@@ -66,6 +68,7 @@ export default function PostCard({ data }) {
       const { data } = await axios.post(endpoint, { profileId });
 
       if (data.success) {
+        toast.success(data.message);
         setFollowed((prev) => !prev);
         console.log("Success:", data.message);
       }
@@ -73,7 +76,9 @@ export default function PostCard({ data }) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
       console.error("Follow/Unfollow error:", errorMessage);
+      toast.error(errorMessage);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       }
     } finally {
@@ -98,7 +103,9 @@ export default function PostCard({ data }) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
       console.error("Like/Dislike error:", errorMessage);
+      toast.error(errorMessage);
       if (error.status == 401) {
+        toast.error("Please Login First");
         navigate("/login");
       }
     } finally {
