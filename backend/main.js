@@ -7,12 +7,22 @@ import ProfileRoute from "./routes/profile.route.js";
 import ActionRoute from "./routes/actions.route.js";
 import feedRoutes from "./routes/feed.route.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 dotenv.config();
 
 connectDB();
 const app = express();
 
 console.log("Working")
+const allowed = [
+  "http://localhost:5173",
+  "https://tasveera-mithlesh.netlify.app"
+];
+
+app.use(cors({
+  origin: allowed,
+  credentials: true
+}));
 
 
 app.use(cookieParser());
