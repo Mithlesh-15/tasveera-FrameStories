@@ -7,7 +7,7 @@ import ProfileRoute from "./routes/profile.route.js";
 import ActionRoute from "./routes/actions.route.js";
 import feedRoutes from "./routes/feed.route.js";
 import cookieParser from "cookie-parser";
-dotenv.config({ path: "./.env" });
+dotenv.config();
 
 connectDB();
 const app = express();
