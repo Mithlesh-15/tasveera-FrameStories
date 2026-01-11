@@ -3,7 +3,7 @@ import { Heart, MessageCircle, Bookmark, Grid, User, Menu } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import logout from "../utils/logout";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function InstagramProfile() {
@@ -34,7 +34,7 @@ export default function InstagramProfile() {
         : "/api/v1/action/follow";
       console.log(endpoint);
 
-      const { data } = await axios.post(endpoint, { profileId });
+      const { data } = await api.post(endpoint, { profileId });
 
       if (data.success) {
         toast.success(data.message);
@@ -60,7 +60,7 @@ export default function InstagramProfile() {
     try {
       const post = await Promise.all(
         postids.map(async (onePostId) => {
-          const response = await axios.post("/api/v1/profile/get-one-post", {
+          const response = await api.post("/api/v1/profile/get-one-post", {
             onePostId,
           });
           return {
@@ -83,7 +83,7 @@ export default function InstagramProfile() {
   const data = async () => {
     try {
       const { profileid } = param;
-      const response = await axios.post("/api/v1/profile/get-profile-details", {
+      const response = await api.post("/api/v1/profile/get-profile-details", {
         profileid,
       });
       if (!response.data) {

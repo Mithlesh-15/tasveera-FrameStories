@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import PostCard from "../components/PostCard";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -20,7 +20,7 @@ function Home() {
     isFetchingRef.current = true;
 
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `/api/v1/feed/videos?page=${pageRef.current}&limit=6`,
         { withCredentials: true }
       );

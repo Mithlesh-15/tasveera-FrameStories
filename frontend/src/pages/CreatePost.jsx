@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Image, Video, Send, Loader } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function CreatePost() {
@@ -54,7 +54,7 @@ export default function CreatePost() {
       payload.append("type", postData.fileType);
       payload.append("caption", postData.caption);
 
-      const response = await axios.post(
+      const response = await api.post(
         "/api/v1/post/upload?purpose=posts",
         payload,
         {

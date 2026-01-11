@@ -1,9 +1,10 @@
-import axios from "axios";
+
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 const logout = async () => {
   try {
-    const response = await axios.get("/api/v1/registration/logout");
+    const response = await api.get("/api/v1/registration/logout");
     toast.success(response.data.message)
     window.location.replace("/login");
   } catch (error) {

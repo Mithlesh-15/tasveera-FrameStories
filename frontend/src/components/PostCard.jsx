@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Heart, EllipsisVertical } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function PostCard({ data }) {
@@ -38,7 +38,7 @@ export default function PostCard({ data }) {
 
   const getInfo = async () => {
     try {
-      const response = await axios.post("/api/v1/post/is-like-follow-owner", {
+      const response = await api.post("/api/v1/post/is-like-follow-owner", {
         profileid: id,
         PostId,
       });
@@ -65,7 +65,7 @@ export default function PostCard({ data }) {
         : "/api/v1/action/follow";
       console.log(endpoint);
 
-      const { data } = await axios.post(endpoint, { profileId });
+      const { data } = await api.post(endpoint, { profileId });
 
       if (data.success) {
         toast.success(data.message);
@@ -92,7 +92,7 @@ export default function PostCard({ data }) {
     try {
       const endpoint = liked ? "/api/v1/action/dislike" : "/api/v1/action/like";
 
-      const { data } = await axios.post(endpoint, { postId: PostId });
+      const { data } = await api.post(endpoint, { postId: PostId });
 
       if (data.success) {
         setLiked((prev) => !prev);

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logout from "../utils/logout";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function MenuBar() {
@@ -56,7 +56,7 @@ export default function MenuBar() {
 
   const goToProfilePage = async () => {
     try {
-      const response = await axios.get("/api/v1/profile/get-my-details");
+      const response = await api.get("/api/v1/profile/get-my-details");
       console.log(response.data.message)
       if (!response.data.data) {
         toast.error("Please Login First")

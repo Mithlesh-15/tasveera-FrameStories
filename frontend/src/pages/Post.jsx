@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 function Post() {
@@ -19,7 +19,7 @@ function Post() {
   });
   const bringPost = async () => {
     try {
-      const response = await axios.post("/api/v1/post/show-one-post", {
+      const response = await api.post("/api/v1/post/show-one-post", {
         postid,
       });
 

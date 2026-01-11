@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import axios from "axios";
+import api from "../api/axios";
 import UserProfileCard from "../components/UserProfileCard";
 import "../utils/scrollBarHide.css";
 import toast from "react-hot-toast";
@@ -23,7 +23,7 @@ function SearchPageLayout() {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await axios.get(`/api/v1/action/search?input=${query}`);
+        const res = await api.get(`/api/v1/action/search?input=${query}`);
         setUsers(res.data.data);
       } catch (error) {
         console.log(error);

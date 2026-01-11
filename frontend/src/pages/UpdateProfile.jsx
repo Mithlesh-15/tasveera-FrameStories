@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { User, Image, Save, Loader, IdCard, AtSign } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function UpdateProfile() {
@@ -79,7 +79,7 @@ export default function UpdateProfile() {
       payload.append("bio", postData.bio);
       payload.append("fullName", postData.fullName);
 
-      const response = await axios.post(
+      const response = await api.post(
         "/api/v1/profile/update-profile?purpose=profile-photo",
         payload,
         {
