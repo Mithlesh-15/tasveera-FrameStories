@@ -26,6 +26,4 @@ app.use("/api/v1/profile", ProfileRoute);
 app.use("/api/v1/action", ActionRoute);
 app.use("/api/v1/feed", feedRoutes);
 
-app.listen(port, () => {
-  console.log(`http://localhost:${port}/`);
-});
+export default app;
