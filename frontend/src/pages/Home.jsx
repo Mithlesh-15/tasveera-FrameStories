@@ -29,7 +29,7 @@ function Home() {
 
     try {
       const res = await axios.get(
-        `https://tasveera-mithlesh.vercel.app/api/v1/feed/images?page=${pageRef.current}&limit=6`,
+        `/api/v1/feed/images?page=${pageRef.current}&limit=6`,
         { withCredentials: true }
       );
 
