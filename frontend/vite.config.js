@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:4024",
+        target: "https://tasveera-frame-stories.vercel.app",
         changeOrigin: true,
         secure: false,
       },

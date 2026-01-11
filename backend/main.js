@@ -1,4 +1,4 @@
-import connectDB from "./lib/connectDb.js";
+import connectDB from "./lib/connectDB.js";
 import express from "express";
 import dotenv from "dotenv";
 import registrationRoute from "./routes/registration.route.js";
