@@ -29,7 +29,7 @@ function Home() {
 
     try {
       const res = await axios.get(
-        `/api/v1/feed/images?page=${pageRef.current}&limit=6`,
+        `https://tasveera-mithlesh.vercel.app/api/v1/feed/images?page=${pageRef.current}&limit=6`,
         { withCredentials: true }
       );
 
@@ -49,8 +49,8 @@ function Home() {
       console.error("Feed error:", error);
       if (error.status == 401) {
         toast.error("Please Login First");
-        navigate("/login");
       }
+      navigate("/login");
     }
 
     isFetchingRef.current = false;
