@@ -12,7 +12,7 @@ dotenv.config();
 connectDB();
 const app = express();
 
-console.log("hii")
+console.log("Working")
 
 
 app.use(cookieParser());
