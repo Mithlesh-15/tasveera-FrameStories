@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { FaFacebookF } from "react-icons/fa6";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
+
+import api from "../api/axios";
 import {
   auth,
   facebookProvider,
@@ -20,7 +21,7 @@ function Login() {
   const handleAuthLogin = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("/api/v1/registration/auth-provider", {
+      const response = await api.post("/api/v1/registration/auth-provider", {
         email: auth.currentUser.email,
         fullName: auth.currentUser.displayName,
         username: auth.currentUser.email,
@@ -54,7 +55,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("/api/v1/registration/login", {
+      const response = await api.post("/api/v1/registration/login", {
         email,
         password,
       });
