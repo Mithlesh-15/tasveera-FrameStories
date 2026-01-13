@@ -11,7 +11,7 @@ export default function CreatePost() {
     fileLink: null,
     caption: "",
     fileType: "image",
-  });
+  }); 
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
