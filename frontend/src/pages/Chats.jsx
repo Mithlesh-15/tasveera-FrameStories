@@ -1,113 +1,122 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Send, Search, MoreVertical, Phone, Video } from 'lucide-react';
+import React, { useState } from "react";
+
+import MenuBar from "../components/MenuBar";
+import {
+  ArrowLeft,
+  Send,
+  Search,
+  MoreVertical,
+  Phone,
+  Video,
+} from "lucide-react";
 
 // Dummy data for users
 const dummyUsers = [
   {
     id: 1,
-    name: 'Rahul Sharma',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul',
-    lastMessage: 'Hey! Kaise ho?',
-    time: '2:30 PM',
+    name: "Rahul Sharma",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul",
+    lastMessage: "Hey! Kaise ho?",
+    time: "2:30 PM",
     unread: 2,
-    online: true
+    online: true,
   },
   {
     id: 2,
-    name: 'Priya Singh',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya',
-    lastMessage: 'Photo bhej dena',
-    time: '1:15 PM',
+    name: "Priya Singh",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
+    lastMessage: "Photo bhej dena",
+    time: "1:15 PM",
     unread: 0,
-    online: true
+    online: true,
   },
   {
     id: 3,
-    name: 'Amit Kumar',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Amit',
-    lastMessage: 'Thanks bro!',
-    time: '12:45 PM',
+    name: "Amit Kumar",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Amit",
+    lastMessage: "Thanks bro!",
+    time: "12:45 PM",
     unread: 0,
-    online: false
+    online: false,
   },
   {
     id: 4,
-    name: 'Sneha Patel',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha',
-    lastMessage: 'Kal milte hain',
-    time: '11:20 AM',
+    name: "Sneha Patel",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha",
+    lastMessage: "Kal milte hain",
+    time: "11:20 AM",
     unread: 1,
-    online: false
+    online: false,
   },
   {
     id: 5,
-    name: 'Vikram Mehta',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram',
-    lastMessage: 'Okay done!',
-    time: 'Yesterday',
+    name: "Vikram Mehta",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram",
+    lastMessage: "Okay done!",
+    time: "Yesterday",
     unread: 0,
-    online: true
-  }
+    online: true,
+  },
 ];
 
 // Dummy messages
 const dummyMessages = {
   1: [
-    { id: 1, text: 'Hey! Kaise ho?', sent: false, time: '2:25 PM' },
-    { id: 2, text: 'Main theek hoon, tum batao', sent: true, time: '2:26 PM' },
-    { id: 3, text: 'Bas sab badhiya hai', sent: false, time: '2:28 PM' },
-    { id: 4, text: 'Aaj kya plan hai?', sent: false, time: '2:30 PM' }
+    { id: 1, text: "Hey! Kaise ho?", sent: false, time: "2:25 PM" },
+    { id: 2, text: "Main theek hoon, tum batao", sent: true, time: "2:26 PM" },
+    { id: 3, text: "Bas sab badhiya hai", sent: false, time: "2:28 PM" },
+    { id: 4, text: "Aaj kya plan hai?", sent: false, time: "2:30 PM" },
   ],
-  2: [
-    { id: 1, text: 'Photo bhej dena', sent: false, time: '1:15 PM' }
-  ],
+  2: [{ id: 1, text: "Photo bhej dena", sent: false, time: "1:15 PM" }],
   3: [
-    { id: 1, text: 'Ye file chahiye thi', sent: true, time: '12:40 PM' },
-    { id: 2, text: 'Thanks bro!', sent: false, time: '12:45 PM' }
+    { id: 1, text: "Ye file chahiye thi", sent: true, time: "12:40 PM" },
+    { id: 2, text: "Thanks bro!", sent: false, time: "12:45 PM" },
   ],
-  4: [
-    { id: 1, text: 'Kal milte hain', sent: false, time: '11:20 AM' }
-  ],
+  4: [{ id: 1, text: "Kal milte hain", sent: false, time: "11:20 AM" }],
   5: [
-    { id: 1, text: 'Wo kaam ho gaya?', sent: true, time: 'Yesterday' },
-    { id: 2, text: 'Okay done!', sent: false, time: 'Yesterday' }
-  ]
+    { id: 1, text: "Wo kaam ho gaya?", sent: true, time: "Yesterday" },
+    { id: 2, text: "Okay done!", sent: false, time: "Yesterday" },
+  ],
 };
 
-export default function Chats() {
+export default function ChatPage() {
   const [selectedUser, setSelectedUser] = useState(null);
-  const [message, setMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [message, setMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSendMessage = () => {
     if (message.trim()) {
       // Here you would add the message to your state/backend
-      console.log('Sending message:', message);
-      setMessage('');
+      console.log("Sending message:", message);
+      setMessage("");
     }
   };
 
-  const filteredUsers = dummyUsers.filter(user =>
+  const filteredUsers = dummyUsers.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="flex h-screen bg-gray-50">
+      <MenuBar />
       {/* Menubar space - lg:ml-64 for large screens */}
       <div className="flex-1 lg:ml-64 flex">
-        
         {/* Users List Section */}
-        <div className={`${
-          selectedUser ? 'hidden lg:flex' : 'flex'
-        } lg:w-96 w-full flex-col bg-white border-r border-gray-200`}>
-          
+        <div
+          className={`${
+            selectedUser ? "hidden lg:flex" : "flex"
+          } lg:w-96 w-full flex-col bg-white border-r border-gray-200`}
+        >
           {/* Header */}
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-2xl font-bold mb-4">Chats</h2>
-            
+
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type="text"
                 placeholder="Search users..."
@@ -125,7 +134,7 @@ export default function Chats() {
                 key={user.id}
                 onClick={() => setSelectedUser(user)}
                 className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  selectedUser?.id === user.id ? 'bg-gray-100' : ''
+                  selectedUser?.id === user.id ? "bg-gray-100" : ""
                 }`}
               >
                 <div className="relative">
@@ -141,11 +150,15 @@ export default function Chats() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-gray-900 truncate">{user.name}</h3>
+                    <h3 className="font-semibold text-gray-900 truncate">
+                      {user.name}
+                    </h3>
                     <span className="text-xs text-gray-500">{user.time}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 truncate">{user.lastMessage}</p>
+                    <p className="text-sm text-gray-600 truncate">
+                      {user.lastMessage}
+                    </p>
                     {user.unread > 0 && (
                       <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5 ml-2">
                         {user.unread}
@@ -159,10 +172,11 @@ export default function Chats() {
         </div>
 
         {/* Chat Section */}
-        <div className={`${
-          selectedUser ? 'flex' : 'hidden lg:flex'
-        } flex-1 flex-col`}>
-          
+        <div
+          className={`${
+            selectedUser ? "flex" : "hidden lg:flex"
+          } flex-1 flex-col`}
+        >
           {selectedUser ? (
             <>
               {/* Chat Header */}
@@ -181,9 +195,11 @@ export default function Chats() {
                 />
 
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">{selectedUser.name}</h3>
+                  <h3 className="font-semibold text-gray-900">
+                    {selectedUser.name}
+                  </h3>
                   <p className="text-sm text-gray-500">
-                    {selectedUser.online ? 'Online' : 'Offline'}
+                    {selectedUser.online ? "Online" : "Offline"}
                   </p>
                 </div>
 
@@ -205,17 +221,23 @@ export default function Chats() {
                 {dummyMessages[selectedUser.id]?.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${msg.sent ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${
+                      msg.sent ? "justify-end" : "justify-start"
+                    }`}
                   >
                     <div
                       className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
                         msg.sent
-                          ? 'bg-blue-500 text-white rounded-br-none'
-                          : 'bg-gray-200 text-gray-900 rounded-bl-none'
+                          ? "bg-blue-500 text-white rounded-br-none"
+                          : "bg-gray-200 text-gray-900 rounded-bl-none"
                       }`}
                     >
                       <p>{msg.text}</p>
-                      <p className={`text-xs mt-1 ${msg.sent ? 'text-blue-100' : 'text-gray-500'}`}>
+                      <p
+                        className={`text-xs mt-1 ${
+                          msg.sent ? "text-blue-100" : "text-gray-500"
+                        }`}
+                      >
                         {msg.time}
                       </p>
                     </div>
@@ -231,7 +253,7 @@ export default function Chats() {
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                     className="flex-1 px-4 py-3 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <button
@@ -258,7 +280,6 @@ export default function Chats() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

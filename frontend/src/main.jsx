@@ -32,8 +32,8 @@ const router = createBrowserRouter(
         <Route path="/profile/:profileid" element={<Profile />} />
         <Route path="/post/:postid" element={<Post />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
-        <Route path="/chats" element={<Chats />} />
       </Route>
+      <Route path="/chats" element={<Chats />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="*" element={<NotFound />} />
