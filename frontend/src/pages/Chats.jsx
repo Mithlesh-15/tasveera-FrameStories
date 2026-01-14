@@ -202,18 +202,6 @@ export default function ChatPage() {
                     {selectedUser.online ? "Online" : "Offline"}
                   </p>
                 </div>
-
-                <div className="flex gap-2">
-                  <button className="p-2 hover:bg-gray-100 rounded-lg">
-                    <Phone size={20} />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-lg">
-                    <Video size={20} />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-lg">
-                    <MoreVertical size={20} />
-                  </button>
-                </div>
               </div>
 
               {/* Messages */}
