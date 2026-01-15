@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import MenuBar from "../components/MenuBar";
 import { ArrowLeft, Send, Search } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Dummy data for users
 const dummyUsers = [
@@ -76,6 +77,8 @@ export default function ChatPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [userLoading, setUserLoading] = useState(false);
+  
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -120,7 +123,26 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex-1 overflow-y-auto pb-20 lg:pb-4">
-            
+            {userLoading ? (
+              <>
+                {/* Users Skeleton */}
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-3 p-4">
+                    {/* Avatar */}
+                    <Skeleton className="w-14 h-14 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse" />
+
+                    <div className="flex-1 space-y-2">
+                      {/* Name */}
+                      <Skeleton className="h-4 w-32 bg-gray-300 dark:bg-gray-700" />
+
+                      {/* Last message */}
+                      <Skeleton className="h-3 w-48 bg-gray-200 dark:bg-gray-600" />
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
                 {/* Users List */}
                 {filteredUsers.map((user) => (
                   <div
@@ -163,6 +185,8 @@ export default function ChatPage() {
                     </div>
                   </div>
                 ))}
+              </>
+            )}
           </div>
         </div>
 
