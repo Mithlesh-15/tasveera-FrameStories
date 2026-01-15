@@ -78,7 +78,7 @@ export default function ChatPage() {
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [userLoading, setUserLoading] = useState(false);
-  
+  const [messageLoading, setMessageLoading] = useState(false);
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -198,60 +198,110 @@ export default function ChatPage() {
         >
           {selectedUser ? (
             <>
-              {/* Chat Header */}
-              <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
-                <button
-                  onClick={() => setSelectedUser(null)}
-                  className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
-                >
-                  <ArrowLeft size={24} />
-                </button>
-
-                <img
-                  src={selectedUser.avatar}
-                  alt={selectedUser.name}
-                  className="w-10 h-10 rounded-full"
-                />
-
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
-                    {selectedUser.name}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {selectedUser.online ? "Online" : "Offline"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-16 lg:mb-0">
-                {dummyMessages[selectedUser.id]?.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${
-                      msg.sent ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                        msg.sent
-                          ? "bg-blue-500 text-white rounded-br-none"
-                          : "bg-gray-200 text-gray-900 rounded-bl-none"
-                      }`}
+              {messageLoading ? (
+                <>
+                  {/* 🔹 Header Skeleton */}
+                 
+                  <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
+                     <button
+                      onClick={() => setSelectedUser(null)}
+                      className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
                     >
-                      <p>{msg.text}</p>
-                      <p
-                        className={`text-xs mt-1 ${
-                          msg.sent ? "text-blue-100" : "text-gray-500"
-                        }`}
-                      >
-                        {msg.time}
+                      <ArrowLeft size={24} />
+                    </button>
+                    <Skeleton className="w-10 h-10 rounded-full bg-gray-300 animate-pulse" />
+
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-32 bg-gray-300" />
+                      <Skeleton className="h-3 w-20 bg-gray-200" />
+                    </div>
+                  </div>
+
+                  {/* 🔹 Messages Skeleton */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-16 lg:mb-0">
+                    {/* Incoming */}
+                    <div className="flex justify-start">
+                      <Skeleton className="h-10 w-56 rounded-2xl bg-gray-200" />
+                    </div>
+
+                    {/* Outgoing */}
+                    <div className="flex justify-end">
+                      <Skeleton className="h-10 w-64 rounded-2xl bg-gray-300" />
+                    </div>
+
+                    {/* Incoming */}
+                    <div className="flex justify-start">
+                      <Skeleton className="h-10 w-40 rounded-2xl bg-gray-200" />
+                    </div>
+
+                    {/* Outgoing */}
+                    <div className="flex justify-end">
+                      <Skeleton className="h-10 w-52 rounded-2xl bg-gray-300" />
+                    </div>
+
+                    {/* Incoming */}
+                    <div className="flex justify-start">
+                      <Skeleton className="h-10 w-48 rounded-2xl bg-gray-200" />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Chat Header */}
+                  <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
+                    <button
+                      onClick={() => setSelectedUser(null)}
+                      className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      <ArrowLeft size={24} />
+                    </button>
+
+                    <img
+                      src={selectedUser.avatar}
+                      alt={selectedUser.name}
+                      className="w-10 h-10 rounded-full"
+                    />
+
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900">
+                        {selectedUser.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {selectedUser.online ? "Online" : "Offline"}
                       </p>
                     </div>
                   </div>
-                ))}
-              </div>
 
+                  {/* Messages */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-16 lg:mb-0">
+                    {dummyMessages[selectedUser.id]?.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex ${
+                          msg.sent ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                            msg.sent
+                              ? "bg-blue-500 text-white rounded-br-none"
+                              : "bg-gray-200 text-gray-900 rounded-bl-none"
+                          }`}
+                        >
+                          <p>{msg.text}</p>
+                          <p
+                            className={`text-xs mt-1 ${
+                              msg.sent ? "text-blue-100" : "text-gray-500"
+                            }`}
+                          >
+                            {msg.time}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
               {/* Message Input */}
               <div className="bg-white border-t border-gray-200 p-4 mb-12 lg:mb-0">
                 <div className="flex items-center gap-2">
@@ -259,6 +309,7 @@ export default function ChatPage() {
                     type="text"
                     placeholder="Type a message..."
                     value={message}
+                    disabled={messageLoading}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                     className="flex-1 px-4 py-3 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
