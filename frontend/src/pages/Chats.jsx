@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 
 import MenuBar from "../components/MenuBar";
-import {
-  ArrowLeft,
-  Send,
-  Search,
-  MoreVertical,
-  Phone,
-  Video,
-} from "lucide-react";
+import { ArrowLeft, Send, Search } from "lucide-react";
 
 // Dummy data for users
 const dummyUsers = [
@@ -126,48 +119,50 @@ export default function ChatPage() {
               />
             </div>
           </div>
-
-          {/* Users List */}
           <div className="flex-1 overflow-y-auto pb-20 lg:pb-4">
-            {filteredUsers.map((user) => (
-              <div
-                key={user.id}
-                onClick={() => setSelectedUser(user)}
-                className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  selectedUser?.id === user.id ? "bg-gray-100" : ""
-                }`}
-              >
-                <div className="relative">
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-14 h-14 rounded-full"
-                  />
-                  {user.online && (
-                    <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
-                  )}
-                </div>
+            
+                {/* Users List */}
+                {filteredUsers.map((user) => (
+                  <div
+                    key={user.id}
+                    onClick={() => setSelectedUser(user)}
+                    className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                      selectedUser?.id === user.id ? "bg-gray-100" : ""
+                    }`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-14 h-14 rounded-full"
+                      />
+                      {user.online && (
+                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                      )}
+                    </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-gray-900 truncate">
-                      {user.name}
-                    </h3>
-                    <span className="text-xs text-gray-500">{user.time}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-semibold text-gray-900 truncate">
+                          {user.name}
+                        </h3>
+                        <span className="text-xs text-gray-500">
+                          {user.time}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-gray-600 truncate">
+                          {user.lastMessage}
+                        </p>
+                        {user.unread > 0 && (
+                          <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5 ml-2">
+                            {user.unread}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 truncate">
-                      {user.lastMessage}
-                    </p>
-                    {user.unread > 0 && (
-                      <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5 ml-2">
-                        {user.unread}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+                ))}
           </div>
         </div>
 
