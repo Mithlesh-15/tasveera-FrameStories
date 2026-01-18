@@ -64,8 +64,17 @@ const userSchema = new Schema(
       ],
       default: [],
     },
+    canMessage: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      default: [],
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 const User = mongoose.model("User", userSchema);
 export default User;
