@@ -78,7 +78,7 @@ export default function ChatPage() {
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [userLoading, setUserLoading] = useState(false);
-  const [messageLoading, setMessageLoading] = useState(true);
+  const [messageLoading, setMessageLoading] = useState(false);
 
   const handleSendMessage = () => {
     if (message.trim()) {

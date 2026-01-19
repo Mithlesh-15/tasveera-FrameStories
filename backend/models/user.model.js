@@ -67,8 +67,12 @@ const userSchema = new Schema(
     canMessage: {
       type: [
         {
-          type: Schema.Types.ObjectId,
-          ref: "User",
+          friend: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+          lastMessage: String,
+          time: String,
         },
       ],
       default: [],
