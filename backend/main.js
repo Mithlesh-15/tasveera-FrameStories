@@ -6,6 +6,7 @@ import PostRoute from "./routes/post.route.js";
 import ProfileRoute from "./routes/profile.route.js";
 import ActionRoute from "./routes/actions.route.js";
 import feedRoutes from "./routes/feed.route.js";
+import chatRoutes from "./routes/chat.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 dotenv.config();
@@ -35,6 +36,7 @@ app.use("/api/v1/post", PostRoute);
 app.use("/api/v1/profile", ProfileRoute);
 app.use("/api/v1/action", ActionRoute);
 app.use("/api/v1/feed", feedRoutes);
+app.use("/api/v1/chat", chatRoutes);
 
 app.listen(port,()=>{
   console.log(`http://localhost:${port}/`)
