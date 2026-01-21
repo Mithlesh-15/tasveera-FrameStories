@@ -19,7 +19,7 @@ const conversationSchema = new mongoose.Schema(
     TotalMessages: {
       type: [
         {
-          type: Schema.Types.ObjectId,
+          type: mongoose.Schema.Types.ObjectId,
           ref: "Message",
         },
       ],
