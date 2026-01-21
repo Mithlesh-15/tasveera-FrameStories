@@ -79,6 +79,8 @@ const dummyMessages = {
 export default function ChatPage() {
   const nevigate = useNavigate();
   const [conversationId, setConversationId] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [allMessages, setAllMessages] = useState([]);
   const [friends, setFriends] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -86,6 +88,23 @@ export default function ChatPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [userLoading, setUserLoading] = useState(false);
   const [messageLoading, setMessageLoading] = useState(false);
+
+ const formatDateTime = (isoTime) => {
+  const date = new Date(isoTime);
+
+  const time = date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const day = date.getDate().toString().padStart(2, "0");
+
+  const month = date.toLocaleString("en-IN", { month: "short" });
+
+  const year = date.getFullYear();
+
+  return `${time} ${day} ${month} ${year}`;
+};
 
   const handleUserClick = async (user) => {
     try {
@@ -95,12 +114,13 @@ export default function ChatPage() {
       const { data } = await api.post("/api/v1/chat/get-conversation", {
         otherUserId: user._id,
       });
-
-      // conversation id store karo state me
+      console.log(data);
+      setCurrentUserId(data.currentUserId);
       setConversationId(data.conversationId);
+      setAllMessages(data.messages);
     } catch (error) {
       console.log(error);
-setSelectedUser(null);
+      setSelectedUser(null);
       const status = error?.response?.status;
       const message = error?.response?.data?.message || "Something went wrong";
 
@@ -108,7 +128,7 @@ setSelectedUser(null);
 
       if (status === 401) {
         toast.error("Please login first");
-        navigate("/login");
+        nevigate("/login");
       }
     } finally {
       setMessageLoading(false);
@@ -356,16 +376,18 @@ setSelectedUser(null);
 
                   {/* Messages */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-16 lg:mb-0">
-                    {dummyMessages[selectedUser.id]?.map((msg) => (
+                    {allMessages?.map((msg) => (
                       <div
-                        key={msg.id}
+                        key={msg._id}
                         className={`flex ${
-                          msg.sent ? "justify-end" : "justify-start"
+                          msg.senderId == currentUserId
+                            ? "justify-end"
+                            : "justify-start"
                         }`}
                       >
                         <div
                           className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                            msg.sent
+                            msg.senderId == currentUserId
                               ? "bg-blue-500 text-white rounded-br-none"
                               : "bg-gray-200 text-gray-900 rounded-bl-none"
                           }`}
@@ -373,10 +395,12 @@ setSelectedUser(null);
                           <p>{msg.text}</p>
                           <p
                             className={`text-xs mt-1 ${
-                              msg.sent ? "text-blue-100" : "text-gray-500"
+                              msg.senderId == currentUserId
+                                ? "text-blue-100"
+                                : "text-gray-500"
                             }`}
                           >
-                            {msg.time}
+                            {formatDateTime(msg.updatedAt)}
                           </p>
                         </div>
                       </div>
