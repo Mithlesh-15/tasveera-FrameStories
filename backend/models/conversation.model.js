@@ -16,6 +16,15 @@ const conversationSchema = new mongoose.Schema(
       ref: "Message",
       default: null,
     },
+    TotalMessages: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Message",
+        },
+      ],
+      default: [],
+    },
   },
   {
     timestamps: true,
