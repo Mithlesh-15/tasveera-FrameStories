@@ -6,11 +6,16 @@ import mongoose from "mongoose";
 export const getOrCreateConversation = async (req, res) => {
   try {
     const { otherUserId } = req.body;
-    const currentUserId = req.userId
+    const currentUserId = req.userId;
 
     if (!currentUserId || !otherUserId) {
       return res.status(400).json({
         message: "Both user IDs are required",
+      });
+    }
+    if (currentUserId.toString() === otherUserId.toString()) {
+      return res.status(400).json({
+        message: "You cannot create conversation with yourself",
       });
     }
 
@@ -33,15 +38,12 @@ export const getOrCreateConversation = async (req, res) => {
         participants: userIds,
       });
 
-      conversation = await conversation.populate(
-        "participants",
-        "name email"
-      );
+      conversation = await conversation.populate("participants", "name email");
     }
 
     // ✅ Get friend (remove current user)
     const friend = conversation.participants.find(
-      (user) => user._id.toString() !== currentUserId
+      (user) => user._id.toString() !== currentUserId,
     );
 
     // ✅ Fetch messages

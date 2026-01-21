@@ -78,6 +78,7 @@ const dummyMessages = {
 
 export default function ChatPage() {
   const nevigate = useNavigate();
+  const [conversationId, setConversationId] = useState(null);
   const [friends, setFriends] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -85,6 +86,34 @@ export default function ChatPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [userLoading, setUserLoading] = useState(false);
   const [messageLoading, setMessageLoading] = useState(false);
+
+  const handleUserClick = async (user) => {
+    try {
+      setMessageLoading(true);
+      setSelectedUser(user);
+
+      const { data } = await api.post("/api/v1/chat/get-conversation", {
+        otherUserId: user._id,
+      });
+
+      // conversation id store karo state me
+      setConversationId(data.conversationId);
+    } catch (error) {
+      console.log(error);
+setSelectedUser(null);
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || "Something went wrong";
+
+      toast.error(message);
+
+      if (status === 401) {
+        toast.error("Please login first");
+        navigate("/login");
+      }
+    } finally {
+      setMessageLoading(false);
+    }
+  };
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -149,8 +178,8 @@ export default function ChatPage() {
           {searchResult.length > 0 &&
             searchResult.map((user) => (
               <div
-                key={user.id}
-                onClick={() => setSelectedUser(user)}
+                key={user._id}
+                onClick={() => handleUserClick(user)}
                 className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
                   selectedUser?.id === user.id ? "bg-gray-100" : ""
                 }`}
@@ -200,7 +229,7 @@ export default function ChatPage() {
                   friends.map((user) => (
                     <div
                       key={user.id}
-                      onClick={() => setSelectedUser(user)}
+                      onClick={() => handleUserClick(user)}
                       className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
                         selectedUser?.id === user.id ? "bg-gray-100" : ""
                       }`}
@@ -310,14 +339,14 @@ export default function ChatPage() {
                     </button>
 
                     <img
-                      src={selectedUser.avatar}
-                      alt={selectedUser.name}
+                      src={selectedUser.profilePhoto}
+                      alt={selectedUser.username}
                       className="w-10 h-10 rounded-full"
                     />
 
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">
-                        {selectedUser.name}
+                        {selectedUser.username}
                       </h3>
                       <p className="text-sm text-gray-500">
                         {selectedUser.online ? "Online" : "Offline"}
