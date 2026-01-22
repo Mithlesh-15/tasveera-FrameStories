@@ -56,26 +56,6 @@ const dummyUsers = [
   },
 ];
 
-// Dummy messages
-const dummyMessages = {
-  1: [
-    { id: 1, text: "Hey! Kaise ho?", sent: false, time: "2:25 PM" },
-    { id: 2, text: "Main theek hoon, tum batao", sent: true, time: "2:26 PM" },
-    { id: 3, text: "Bas sab badhiya hai", sent: false, time: "2:28 PM" },
-    { id: 4, text: "Aaj kya plan hai?", sent: false, time: "2:30 PM" },
-  ],
-  2: [{ id: 1, text: "Photo bhej dena", sent: false, time: "1:15 PM" }],
-  3: [
-    { id: 1, text: "Ye file chahiye thi", sent: true, time: "12:40 PM" },
-    { id: 2, text: "Thanks bro!", sent: false, time: "12:45 PM" },
-  ],
-  4: [{ id: 1, text: "Kal milte hain", sent: false, time: "11:20 AM" }],
-  5: [
-    { id: 1, text: "Wo kaam ho gaya?", sent: true, time: "Yesterday" },
-    { id: 2, text: "Okay done!", sent: false, time: "Yesterday" },
-  ],
-};
-
 export default function ChatPage() {
   const nevigate = useNavigate();
   const [conversationId, setConversationId] = useState(null);

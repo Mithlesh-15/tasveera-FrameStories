@@ -55,13 +55,75 @@ export const getOrCreateConversation = async (req, res) => {
 
     return res.status(200).json({
       conversation,
-      friend,
+      currentUserId,
       messages,
     });
   } catch (error) {
     console.error("getOrCreateConversation error:", error);
     return res.status(500).json({
       message: "Something went wrong",
+    });
+  }
+};
+
+export const sendMessage = async (req, res) => {
+  try {
+    const senderId = req.userId;
+    const { conversationId, text } = req.body;
+
+    // Validate required fields
+    if (!conversationId || !text?.trim()) {
+      return res.status(400).json({
+        message: "ConversationId and message text are required",
+      });
+    }
+
+    // Check if conversation exists
+    const conversation = await Conversation.findById(conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({
+        message: "Conversation not found",
+      });
+    }
+
+    // Get receiver id (exclude current sender from participants)
+    const receiverId = conversation.participants.find(
+      (id) => id.toString() !== senderId.toString()
+    );
+
+    if (!receiverId) {
+      return res.status(400).json({
+        message: "Receiver not found in conversation",
+      });
+    }
+
+    // Create new message
+    const message = await Message.create({
+      conversationId,
+      senderId,
+      receiverId,
+      text,
+      seen: false,
+    });
+
+    // Update conversation lastMessage and push message into TotalMessages
+    conversation.lastMessage = message._id;
+    conversation.TotalMessages.push(message._id);
+    await conversation.save();
+
+    // Emit realtime message to sender and receiver (enable when socket is ready)
+    // io.to(senderId.toString()).emit("newMessage", message);
+    // io.to(receiverId.toString()).emit("newMessage", message);
+
+    res.status(201).json({
+      message: "Message sent successfully",
+      data: message,
+    });
+  } catch (error) {
+    console.error("Send Message Error:", error);
+    res.status(500).json({
+      message: "Internal server error",
     });
   }
 };
