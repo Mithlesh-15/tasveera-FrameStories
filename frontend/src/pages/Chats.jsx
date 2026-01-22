@@ -65,26 +65,51 @@ export default function ChatPage() {
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState("");
+  const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [userLoading, setUserLoading] = useState(false);
   const [messageLoading, setMessageLoading] = useState(false);
 
- const formatDateTime = (isoTime) => {
-  const date = new Date(isoTime);
+  const formatDateTime = (isoTime) => {
+    const date = new Date(isoTime);
 
-  const time = date.toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+    const time = date.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-  const day = date.getDate().toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
 
-  const month = date.toLocaleString("en-IN", { month: "short" });
+    const month = date.toLocaleString("en-IN", { month: "short" });
 
-  const year = date.getFullYear();
+    const year = date.getFullYear();
 
-  return `${time} ${day} ${month} ${year}`;
-};
+    return `${time} ${day} ${month} ${year}`;
+  };
+
+  const handleSendMessage = async () => {
+    try {
+      setSendMessageLoading(true);
+      await api.post("/api/v1/chat/send-message", {
+        conversationId,
+        text: message,
+      });
+      setMessage("")
+    } catch (error) {
+      console.log(error);
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || "Something went wrong";
+
+      toast.error(message);
+
+      if (status === 401) {
+        toast.error("Please login first");
+        nevigate("/login");
+      }
+    } finally {
+      setSendMessageLoading(false);
+    }
+  };
 
   const handleUserClick = async (user) => {
     try {
@@ -94,9 +119,8 @@ export default function ChatPage() {
       const { data } = await api.post("/api/v1/chat/get-conversation", {
         otherUserId: user._id,
       });
-      console.log(data);
       setCurrentUserId(data.currentUserId);
-      setConversationId(data.conversationId);
+      setConversationId(data.conversation._id);
       setAllMessages(data.messages);
     } catch (error) {
       console.log(error);
@@ -112,14 +136,6 @@ export default function ChatPage() {
       }
     } finally {
       setMessageLoading(false);
-    }
-  };
-
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      // Here you would add the message to your state/backend
-      console.log("Sending message:", message);
-      setMessage("");
     }
   };
 
@@ -402,6 +418,7 @@ export default function ChatPage() {
                   />
                   <button
                     onClick={handleSendMessage}
+                    disabled={sendMessageLoading}
                     className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
                   >
                     <Send size={20} />
