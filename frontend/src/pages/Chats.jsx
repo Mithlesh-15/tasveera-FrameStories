@@ -89,6 +89,7 @@ export default function ChatPage() {
   };
 
   const handleSendMessage = async () => {
+    if (sendMessageLoading) return;
     try {
       setSendMessageLoading(true);
       await api.post("/api/v1/chat/send-message", {
@@ -420,7 +421,11 @@ export default function ChatPage() {
                     value={message}
                     disabled={messageLoading}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !sendMessageLoading) {
+                        handleSendMessage();
+                      }
+                    }}
                     className="flex-1 px-4 py-3 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <button
