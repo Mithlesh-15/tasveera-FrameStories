@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import MenuBar from "../components/MenuBar";
 import { ArrowLeft, Send, Search } from "lucide-react";
@@ -58,6 +58,7 @@ const dummyUsers = [
 
 export default function ChatPage() {
   const nevigate = useNavigate();
+  const bottomRef = useRef(null);
   const [conversationId, setConversationId] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [allMessages, setAllMessages] = useState([]);
@@ -94,7 +95,7 @@ export default function ChatPage() {
         conversationId,
         text: message,
       });
-      setMessage("")
+      setMessage("");
     } catch (error) {
       console.log(error);
       const status = error?.response?.status;
@@ -138,6 +139,10 @@ export default function ChatPage() {
       setMessageLoading(false);
     }
   };
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [allMessages]);
 
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -401,6 +406,8 @@ export default function ChatPage() {
                         </div>
                       </div>
                     ))}
+                    {/* Scroll target */}
+                    <div ref={bottomRef} />
                   </div>
                 </>
               )}
