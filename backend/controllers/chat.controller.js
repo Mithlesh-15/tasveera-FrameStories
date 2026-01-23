@@ -3,6 +3,16 @@ import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
 
+const formatTime = (date) => {
+  if (!date) return null;
+
+  return new Date(date).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
 export const getOrCreateConversation = async (req, res) => {
   try {
     const { otherUserId } = req.body;
@@ -89,7 +99,7 @@ export const sendMessage = async (req, res) => {
 
     // Get receiver id (exclude current sender from participants)
     const receiverId = conversation.participants.find(
-      (id) => id.toString() !== senderId.toString()
+      (id) => id.toString() !== senderId.toString(),
     );
 
     if (!receiverId) {
@@ -122,6 +132,60 @@ export const sendMessage = async (req, res) => {
     });
   } catch (error) {
     console.error("Send Message Error:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getMyConversations = async (req, res) => {
+  try {
+    const currentUserId = req.userId;
+
+    if (!currentUserId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+      });
+    }
+
+    // Find all conversations where current user is a participant
+    const conversations = await Conversation.find({
+      participants: currentUserId,
+    })
+      .populate("participants", "username profilePhoto")
+      .populate("lastMessage", "text createdAt senderId")
+      .sort({ updatedAt: -1 });
+
+    // Map conversations to required frontend format
+    const formattedConversations = conversations.map((conv) => {
+      const friend = conv.participants.find(
+        (user) => user._id.toString() !== currentUserId.toString(),
+      );
+
+      return {
+        conversationId: conv._id,
+        friend: {
+          _id: friend?._id,
+          username: friend?.username,
+          profilePhoto: friend?.profilePhoto,
+        },
+        lastMessage: conv.lastMessage
+          ? {
+              text: conv.lastMessage.text,
+              time: formatTime(conv.lastMessage.createdAt),
+              senderId: conv.lastMessage.senderId,
+            }
+          : null,
+        updatedAt: conv.updatedAt,
+      };
+    });
+
+    res.status(200).json({
+      count: formattedConversations.length,
+      conversations: formattedConversations,
+    });
+  } catch (error) {
+    console.error("Get My Conversations Error:", error);
     res.status(500).json({
       message: "Internal server error",
     });
