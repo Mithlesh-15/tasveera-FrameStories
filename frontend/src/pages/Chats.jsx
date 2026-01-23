@@ -8,53 +8,7 @@ import api from "@/api/axios";
 import { useNavigate } from "react-router-dom";
 
 // Dummy data for users
-const dummyUsers = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul",
-    lastMessage: "Hey! Kaise ho?",
-    time: "2:30 PM",
-    unread: 2,
-    online: true,
-  },
-  {
-    id: 2,
-    name: "Priya Singh",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
-    lastMessage: "Photo bhej dena",
-    time: "1:15 PM",
-    unread: 0,
-    online: true,
-  },
-  {
-    id: 3,
-    name: "Amit Kumar",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Amit",
-    lastMessage: "Thanks bro!",
-    time: "12:45 PM",
-    unread: 0,
-    online: false,
-  },
-  {
-    id: 4,
-    name: "Sneha Patel",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha",
-    lastMessage: "Kal milte hain",
-    time: "11:20 AM",
-    unread: 1,
-    online: false,
-  },
-  {
-    id: 5,
-    name: "Vikram Mehta",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram",
-    lastMessage: "Okay done!",
-    time: "Yesterday",
-    unread: 0,
-    online: true,
-  },
-];
+
 
 export default function ChatPage() {
   const nevigate = useNavigate();
@@ -98,7 +52,7 @@ export default function ChatPage() {
       });
       setMessage("");
     } catch (error) {
-      console.log(error);
+      console.log("Message Send Error :", error);
       const status = error?.response?.status;
       const message = error?.response?.data?.message || "Something went wrong";
 
@@ -116,6 +70,7 @@ export default function ChatPage() {
   const handleUserClick = async (user) => {
     try {
       setMessageLoading(true);
+      setSearchQuery("")
       setSelectedUser(user);
 
       const { data } = await api.post("/api/v1/chat/get-conversation", {
@@ -125,7 +80,7 @@ export default function ChatPage() {
       setConversationId(data.conversation._id);
       setAllMessages(data.messages);
     } catch (error) {
-      console.log(error);
+      console.log("User Click Error : ", error);
       setSelectedUser(null);
       const status = error?.response?.status;
       const message = error?.response?.data?.message || "Something went wrong";
@@ -138,6 +93,29 @@ export default function ChatPage() {
       }
     } finally {
       setMessageLoading(false);
+    }
+  };
+
+  const fetchConversations = async () => {
+    try {
+      setUserLoading(true);
+      const response = await api.get("/api/v1/chat/get-conversations");
+      setFriends(response.data.conversations);
+    } catch (error) {
+      console.log("Fetch Conversations Error : ", error);
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || "Something went wrong";
+
+      toast.error(message);
+
+      if (status === 401) {
+        toast.error("Please login first");
+        nevigate("/login");
+      } else {
+        nevigate("/");
+      }
+    } finally {
+      setUserLoading(false);
     }
   };
 
@@ -154,7 +132,7 @@ export default function ChatPage() {
     const timer = setTimeout(async () => {
       try {
         const res = await api.get(`/api/v1/action/search?input=${searchQuery}`);
-        // console.log(res.data.data);
+
         setSearchResult(res.data.data);
       } catch (error) {
         console.log(error);
@@ -166,7 +144,11 @@ export default function ChatPage() {
     }, 500); // debounce delay
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, nevigate]);
+
+  useEffect(() => {
+    fetchConversations();
+  },[]);
   return (
     <div className="flex h-screen bg-gray-50">
       <MenuBar />
@@ -203,7 +185,7 @@ export default function ChatPage() {
                 key={user._id}
                 onClick={() => handleUserClick(user)}
                 className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  selectedUser?.id === user.id ? "bg-gray-100" : ""
+                  selectedUser?._id === user._id ? "bg-gray-100" : ""
                 }`}
               >
                 <div className="relative">
@@ -247,19 +229,20 @@ export default function ChatPage() {
             ) : (
               <>
                 {/* Users List */}
+
                 {friends.length > 0 &&
                   friends.map((user) => (
                     <div
-                      key={user.id}
-                      onClick={() => handleUserClick(user)}
+                      key={user.friend._id}
+                      onClick={() => handleUserClick(user.friend)}
                       className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                        selectedUser?.id === user.id ? "bg-gray-100" : ""
+                        selectedUser?._id === user.friend._id ? "bg-gray-100" : ""
                       }`}
                     >
                       <div className="relative">
                         <img
-                          src={user.avatar}
-                          alt={user.name}
+                          src={user.friend.profilePhoto}
+                          alt={user.friend.username}
                           className="w-14 h-14 rounded-full"
                         />
                         {user.online && (
@@ -270,15 +253,17 @@ export default function ChatPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
                           <h3 className="font-semibold text-gray-900 truncate">
-                            {user.name}
+                            {user.friend.username}
                           </h3>
                           <span className="text-xs text-gray-500">
-                            {user.time}
+                            {user.lastMessage ? user.lastMessage.time : ""}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <p className="text-sm text-gray-600 truncate">
-                            {user.lastMessage}
+                            {user.lastMessage
+                              ? user.lastMessage.text
+                              : "No messages yet"}
                           </p>
                           {user.unread > 0 && (
                             <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5 ml-2">
