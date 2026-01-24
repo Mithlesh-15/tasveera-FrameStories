@@ -2,6 +2,7 @@ import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
+import { io } from "../socket/socket.js";
 
 const formatTime = (date) => {
   if (!date) return null;
@@ -123,8 +124,8 @@ export const sendMessage = async (req, res) => {
     await conversation.save();
 
     // Emit realtime message to sender and receiver (enable when socket is ready)
-    // io.to(senderId.toString()).emit("newMessage", message);
-    // io.to(receiverId.toString()).emit("newMessage", message);
+    io.to(senderId.toString()).emit("newMessage", message);
+    io.to(receiverId.toString()).emit("newMessage", message);
 
     res.status(201).json({
       message: "Message sent successfully",
