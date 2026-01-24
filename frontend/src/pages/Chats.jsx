@@ -164,6 +164,10 @@ export default function ChatPage() {
     return () => clearTimeout(timer);
   }, [searchQuery, nevigate]);
 
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
   // for Sockets
   useEffect(() => {
     fetchCurrentUserId();
@@ -187,9 +191,6 @@ export default function ChatPage() {
     };
   }, []);
 
-  useEffect(() => {
-    fetchConversations();
-  }, []);
   return (
     <div className="flex h-screen bg-gray-50">
       <MenuBar />
@@ -405,7 +406,7 @@ export default function ChatPage() {
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-16 lg:mb-0">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 ">
                     {allMessages?.map((msg) => (
                       <div
                         key={msg._id}
