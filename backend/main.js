@@ -1,5 +1,6 @@
 import connectDB from "./lib/connectDB.js";
 import express from "express";
+import http from "http";
 import dotenv from "dotenv";
 import registrationRoute from "./routes/registration.route.js";
 import PostRoute from "./routes/post.route.js";
@@ -9,12 +10,17 @@ import feedRoutes from "./routes/feed.route.js";
 import chatRoutes from "./routes/chat.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { initSocket } from "./socket/socket.js";
 dotenv.config();
 
 connectDB();
 const app = express();
+const server = http.createServer(app);
 
-console.log("Working")
+// init socket
+initSocket(server);
+
+
 const allowed = [
   "http://localhost:5173",
   "https://tasveera-mithlesh.netlify.app"
@@ -38,7 +44,7 @@ app.use("/api/v1/action", ActionRoute);
 app.use("/api/v1/feed", feedRoutes);
 app.use("/api/v1/chat", chatRoutes);
 
-app.listen(port,()=>{
-  console.log(`http://localhost:${port}/`)
-})
-// export default app;
+server.listen(5000, () => {
+  console.log("Server running on port 5000");
+});
+// export default server;
