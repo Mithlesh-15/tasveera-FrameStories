@@ -6,9 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
 import api from "@/api/axios";
 import { useNavigate } from "react-router-dom";
+import { socket } from "@/utils/socket";
 
 // Dummy data for users
-
 
 export default function ChatPage() {
   const nevigate = useNavigate();
@@ -70,7 +70,7 @@ export default function ChatPage() {
   const handleUserClick = async (user) => {
     try {
       setMessageLoading(true);
-      setSearchQuery("")
+      setSearchQuery("");
       setSelectedUser(user);
 
       const { data } = await api.post("/api/v1/chat/get-conversation", {
@@ -119,6 +119,24 @@ export default function ChatPage() {
     }
   };
 
+  const fetchCurrentUserId = async () => {
+    try {
+      const response = await api.get("/api/v1/get-current-user-id");
+      setCurrentUserId(response.data.id);
+    } catch (error) {
+      console.log("Fetch User Error : ", error);
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || "Something went wrong";
+
+      toast.error(message);
+
+      if (status === 401) {
+        toast.error("Please login first");
+        nevigate("/login");
+      }
+    }
+  };
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [allMessages]);
@@ -146,9 +164,32 @@ export default function ChatPage() {
     return () => clearTimeout(timer);
   }, [searchQuery, nevigate]);
 
+  // for Sockets
+  useEffect(() => {
+    fetchCurrentUserId();
+    if (!currentUserId) return;
+
+    socket.connect();
+    socket.emit("join", currentUserId);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [currentUserId]);
+
+  useEffect(() => {
+    socket.on("newMessage", (message) => {
+      setAllMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, []);
+
   useEffect(() => {
     fetchConversations();
-  },[]);
+  }, []);
   return (
     <div className="flex h-screen bg-gray-50">
       <MenuBar />
@@ -236,7 +277,9 @@ export default function ChatPage() {
                       key={user.friend._id}
                       onClick={() => handleUserClick(user.friend)}
                       className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                        selectedUser?._id === user.friend._id ? "bg-gray-100" : ""
+                        selectedUser?._id === user.friend._id
+                          ? "bg-gray-100"
+                          : ""
                       }`}
                     >
                       <div className="relative">

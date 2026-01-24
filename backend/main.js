@@ -11,6 +11,7 @@ import chatRoutes from "./routes/chat.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { initSocket } from "./socket/socket.js";
+import isAuthorized from "./middleware/isAuthorized.js";
 dotenv.config();
 
 connectDB();
@@ -20,23 +21,28 @@ const server = http.createServer(app);
 // init socket
 initSocket(server);
 
-
 const allowed = [
   "http://localhost:5173",
-  "https://tasveera-mithlesh.netlify.app"
+  "https://tasveera-mithlesh.netlify.app",
 ];
 
-app.use(cors({
-  origin: allowed,
-  credentials: true
-}));
-
+app.use(
+  cors({
+    origin: allowed,
+    credentials: true,
+  }),
+);
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT | 4000;
 
+app.use("/api/v1/get-current-user-id", isAuthorized, (req,res) => {
+  return res.json({
+    id:req.userId
+  })
+});
 app.use("/api/v1/registration", registrationRoute);
 app.use("/api/v1/post", PostRoute);
 app.use("/api/v1/profile", ProfileRoute);
@@ -44,7 +50,7 @@ app.use("/api/v1/action", ActionRoute);
 app.use("/api/v1/feed", feedRoutes);
 app.use("/api/v1/chat", chatRoutes);
 
-server.listen(5000, () => {
-  console.log("Server running on port 5000");
+server.listen(port , () => {
+  console.log(`Socket is running on http://localhost:${port}`);
 });
 // export default server;
