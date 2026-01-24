@@ -19,6 +19,7 @@ export default function ChatPage() {
   const [friends, setFriends] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -137,6 +138,10 @@ export default function ChatPage() {
     }
   };
 
+  const isUserOnline = (userId) => {
+    return onlineUsers.includes(userId);
+  };
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [allMessages]);
@@ -188,6 +193,15 @@ export default function ChatPage() {
 
     return () => {
       socket.off("newMessage");
+    };
+  }, []);
+  useEffect(() => {
+    socket.on("onlineUsers", (users) => {
+      setOnlineUsers(users);
+    });
+
+    return () => {
+      socket.off("onlineUsers");
     };
   }, []);
 
@@ -289,7 +303,7 @@ export default function ChatPage() {
                           alt={user.friend.username}
                           className="w-14 h-14 rounded-full"
                         />
-                        {user.online && (
+                        {isUserOnline(user.friend._id) && (
                           <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
                         )}
                       </div>
@@ -389,18 +403,24 @@ export default function ChatPage() {
                       <ArrowLeft size={24} />
                     </button>
 
-                    <img
-                      src={selectedUser.profilePhoto}
-                      alt={selectedUser.username}
-                      className="w-10 h-10 rounded-full"
-                    />
+                    <div className="relative">
+                      <img
+                        src={selectedUser?.profilePhoto}
+                        alt={selectedUser?.username}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+
+                      {isUserOnline(selectedUser?._id) && (
+                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
+                      )}
+                    </div>
 
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">
                         {selectedUser.username}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {selectedUser.online ? "Online" : "Offline"}
+                        {isUserOnline(selectedUser._id) ? "Online" : "Offline"}
                       </p>
                     </div>
                   </div>
