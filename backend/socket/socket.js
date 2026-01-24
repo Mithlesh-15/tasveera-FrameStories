@@ -3,7 +3,6 @@ import { Server } from "socket.io";
 let io;
 
 // Track online users safely
-const onlineUsers = new Map(); // userId -> socketId
 
 export const initSocket = (httpServer) => {
   io = new Server(httpServer, {
@@ -12,17 +11,19 @@ export const initSocket = (httpServer) => {
       credentials: true,
     },
   });
-
+  const onlineUsers = new Map();
   io.on("connection", (socket) => {
-    console.log("Socket connected:", socket.id);
+    console.log("🔥 Socket connected:", socket.id);
 
-    // User joins with userId
     socket.on("join", (userId) => {
-      onlineUsers.set(userId, socket.id);
-      socket.join(userId); // personal room
+      console.log("👤 User joined room:", userId);
+
+      onlineUsers.set(userId.toString(), socket.id);
+      socket.join(userId.toString());
+
+      // Broadcast updated online users list
       io.emit("onlineUsers", Array.from(onlineUsers.keys()));
     });
-
     socket.on("disconnect", () => {
       for (const [userId, socketId] of onlineUsers.entries()) {
         if (socketId === socket.id) {
@@ -31,8 +32,9 @@ export const initSocket = (httpServer) => {
         }
       }
 
+      // Broadcast updated online users list
       io.emit("onlineUsers", Array.from(onlineUsers.keys()));
-      console.log("Socket disconnected:", socket.id);
+      console.log("❌ Socket disconnected:", socket.id);
     });
   });
 
