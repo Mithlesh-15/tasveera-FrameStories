@@ -155,6 +155,7 @@ export const getMyConversations = async (req, res) => {
     })
       .populate("participants", "username profilePhoto")
       .populate("lastMessage", "text createdAt senderId")
+      .populate("TotalMessages", "receiverId seen")
       .sort({ updatedAt: -1 });
 
     // Map conversations to required frontend format
@@ -162,6 +163,11 @@ export const getMyConversations = async (req, res) => {
       const friend = conv.participants.find(
         (user) => user._id.toString() !== currentUserId.toString(),
       );
+      const unseenCount = conv.TotalMessages.filter(
+        (msg) =>
+          msg.receiverId?.toString() === currentUserId.toString() &&
+          msg.seen === false,
+      ).length;
 
       return {
         conversationId: conv._id,
@@ -177,6 +183,7 @@ export const getMyConversations = async (req, res) => {
               senderId: conv.lastMessage.senderId,
             }
           : null,
+        unseenCount,
         updatedAt: conv.updatedAt,
       };
     });
@@ -187,6 +194,39 @@ export const getMyConversations = async (req, res) => {
     });
   } catch (error) {
     console.error("Get My Conversations Error:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const markMessagesSeen = async (req, res) => {
+  try {
+    const currentUserId = req.userId;
+    const { conversationId } = req.params;
+
+    if (!conversationId) {
+      return res.status(400).json({
+        message: "ConversationId required",
+      });
+    }
+
+    await Message.updateMany(
+      {
+        conversationId,
+        receiverId: currentUserId,
+        seen: false,
+      },
+      {
+        $set: { seen: true },
+      },
+    );
+
+    res.status(200).json({
+      message: "Messages marked as seen",
+    });
+  } catch (error) {
+    console.error("Mark Seen Error:", error);
     res.status(500).json({
       message: "Internal server error",
     });
