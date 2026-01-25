@@ -8,8 +8,6 @@ import api from "@/api/axios";
 import { useNavigate } from "react-router-dom";
 import { socket } from "@/utils/socket";
 
-// Dummy data for users
-
 export default function ChatPage() {
   const nevigate = useNavigate();
   const bottomRef = useRef(null);
@@ -25,6 +23,9 @@ export default function ChatPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [userLoading, setUserLoading] = useState(false);
   const [messageLoading, setMessageLoading] = useState(false);
+
+  const currentUserIdRef = useRef(currentUserId);
+  const selectedConversationIdRef = useRef(conversationId);
 
   const formatDateTime = (isoTime) => {
     const date = new Date(isoTime);
@@ -73,12 +74,23 @@ export default function ChatPage() {
       setMessageLoading(true);
       setSearchQuery("");
       setSelectedUser(user);
-
       const { data } = await api.post("/api/v1/chat/get-conversation", {
         otherUserId: user._id,
       });
       setCurrentUserId(data.currentUserId);
       setConversationId(data.conversation._id);
+      selectedConversationIdRef.current = data.conversation._id;
+
+      await api.patch(`/api/v1/chat/seen/${data.conversation._id}`);
+
+      setFriends((prev) =>
+        prev.map((conv) =>
+          conv.conversationId === data.conversation._id
+            ? { ...conv, unseenCount: 0 }
+            : conv,
+        ),
+      );
+
       setAllMessages(data.messages);
     } catch (error) {
       console.log("User Click Error : ", error);
@@ -173,7 +185,15 @@ export default function ChatPage() {
     fetchConversations();
   }, []);
 
-  // for Sockets
+  // for Sockets ----------
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId;
+  }, [currentUserId]);
+
+  useEffect(() => {
+    selectedConversationIdRef.current = conversationId;
+  }, [conversationId]);
+
   useEffect(() => {
     fetchCurrentUserId();
     if (!currentUserId) return;
@@ -189,6 +209,33 @@ export default function ChatPage() {
   useEffect(() => {
     socket.on("newMessage", (message) => {
       setAllMessages((prev) => [...prev, message]);
+
+      setFriends((prev) => {
+        if (!Array.isArray(prev)) return prev;
+        const currentUserId = currentUserIdRef.current;
+        const activeConversationId = selectedConversationIdRef.current;
+        return prev.map((conv) => {
+          if (conv.conversationId !== message.conversationId) {
+            return conv;
+          }
+
+          const isReceiver =
+            message.receiverId === currentUserId &&
+            activeConversationId !== message.conversationId;
+
+          const currentCount = Number(conv.unseenCount || 0);
+
+          return {
+            ...conv,
+            lastMessage: {
+              text: message.text,
+              time: formatDateTime(message.createdAt),
+              senderId: message.senderId,
+            },
+            unseenCount: isReceiver ? currentCount + 1 : currentCount,
+          };
+        });
+      });
     });
 
     return () => {
@@ -295,6 +342,8 @@ export default function ChatPage() {
                         selectedUser?._id === user.friend._id
                           ? "bg-gray-100"
                           : ""
+                      } ${
+                        user.unseenCount > 0 ? "bg-blue-50 font-semibold" : ""
                       }`}
                     >
                       <div className="relative">
@@ -323,9 +372,9 @@ export default function ChatPage() {
                               ? user.lastMessage.text
                               : "No messages yet"}
                           </p>
-                          {user.unread > 0 && (
-                            <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5 ml-2">
-                              {user.unread}
+                          {user.unseenCount > 0 && (
+                            <span className="ml-auto bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                              {user.unseenCount}
                             </span>
                           )}
                         </div>
@@ -351,7 +400,11 @@ export default function ChatPage() {
 
                   <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
                     <button
-                      onClick={() => setSelectedUser(null)}
+                      onClick={() => {
+                        setSelectedUser(null);
+                        setConversationId(null);
+                        selectedConversationIdRef.current = null;
+                      }}
                       className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
                     >
                       <ArrowLeft size={24} />
@@ -397,7 +450,11 @@ export default function ChatPage() {
                   {/* Chat Header */}
                   <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
                     <button
-                      onClick={() => setSelectedUser(null)}
+                      onClick={() => {
+                        setSelectedUser(null);
+                        setConversationId(null);
+                        selectedConversationIdRef.current = null;
+                      }}
                       className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
                     >
                       <ArrowLeft size={24} />

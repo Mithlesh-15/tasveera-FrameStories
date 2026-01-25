@@ -62,7 +62,6 @@ export const getOrCreateConversation = async (req, res) => {
       conversationId: conversation._id,
     })
       .sort({ createdAt: 1 })
-      .limit(20);
 
     return res.status(200).json({
       conversation,
