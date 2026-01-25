@@ -4,15 +4,7 @@ import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import { io } from "../socket/socket.js";
 
-const formatTime = (date) => {
-  if (!date) return null;
 
-  return new Date(date).toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-};
 
 export const getOrCreateConversation = async (req, res) => {
   try {
@@ -178,7 +170,7 @@ export const getMyConversations = async (req, res) => {
         lastMessage: conv.lastMessage
           ? {
               text: conv.lastMessage.text,
-              time: formatTime(conv.lastMessage.createdAt),
+              time: conv.lastMessage.createdAt,
               senderId: conv.lastMessage.senderId,
             }
           : null,

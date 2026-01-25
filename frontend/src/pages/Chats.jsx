@@ -363,7 +363,9 @@ export default function ChatPage() {
                             {user.friend.username}
                           </h3>
                           <span className="text-xs text-gray-500">
-                            {user.lastMessage ? user.lastMessage.time : ""}
+                            {user.lastMessage
+                              ? formatDateTime(user.lastMessage.time)
+                              : ""}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
