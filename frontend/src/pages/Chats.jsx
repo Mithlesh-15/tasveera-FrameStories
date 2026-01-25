@@ -398,7 +398,7 @@ export default function ChatPage() {
             <>
               {messageLoading ? (
                 <>
-                  {/* 🔹 Header Skeleton */}
+                  {/*  Header Skeleton */}
 
                   <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3">
                     <button
@@ -419,7 +419,7 @@ export default function ChatPage() {
                     </div>
                   </div>
 
-                  {/* 🔹 Messages Skeleton */}
+                  {/*  Messages Skeleton */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-16 lg:mb-0">
                     {/* Incoming */}
                     <div className="flex justify-start">

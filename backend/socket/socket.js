@@ -13,10 +13,8 @@ export const initSocket = (httpServer) => {
   });
   const onlineUsers = new Map();
   io.on("connection", (socket) => {
-    console.log("🔥 Socket connected:", socket.id);
 
     socket.on("join", (userId) => {
-      console.log("👤 User joined room:", userId);
 
       onlineUsers.set(userId.toString(), socket.id);
       socket.join(userId.toString());
@@ -34,7 +32,6 @@ export const initSocket = (httpServer) => {
 
       // Broadcast updated online users list
       io.emit("onlineUsers", Array.from(onlineUsers.keys()));
-      console.log("❌ Socket disconnected:", socket.id);
     });
   });
 

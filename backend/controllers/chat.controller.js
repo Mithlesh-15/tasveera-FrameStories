@@ -22,20 +22,20 @@ export const getOrCreateConversation = async (req, res) => {
       });
     }
 
-    // ✅ Ensure ObjectId format
+    // Ensure ObjectId format
     const userIds = [
       new mongoose.Types.ObjectId(currentUserId),
       new mongoose.Types.ObjectId(otherUserId),
     ];
 
-    // ✅ Find existing conversation between both users
+    // Find existing conversation between both users
     let conversation = await Conversation.findOne({
       participants: { $all: userIds },
     })
       .populate("participants", "name email")
       .populate("lastMessage");
 
-    // ✅ If not found → create new conversation
+    // If not found → create new conversation
     if (!conversation) {
       conversation = await Conversation.create({
         participants: userIds,
@@ -44,12 +44,12 @@ export const getOrCreateConversation = async (req, res) => {
       conversation = await conversation.populate("participants", "name email");
     }
 
-    // ✅ Get friend (remove current user)
+    // Get friend (remove current user)
     const friend = conversation.participants.find(
       (user) => user._id.toString() !== currentUserId,
     );
 
-    // ✅ Fetch messages
+    // Fetch messages
     const messages = await Message.find({
       conversationId: conversation._id,
     })
