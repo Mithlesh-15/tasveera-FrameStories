@@ -35,7 +35,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const port = process.env.PORT | 4000;
+const port = process.env.PORT || 4000;
 
 app.use("/api/v1/get-current-user-id", isAuthorized, (req,res) => {
   return res.json({
