@@ -5,9 +5,12 @@ let io;
 // Track online users safely
 
 export const initSocket = (httpServer) => {
+  const allowed = [
+  "https://tasveera-mithlesh.netlify.app",
+];
   io = new Server(httpServer, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: allowed,
       credentials: true,
     },
   });
