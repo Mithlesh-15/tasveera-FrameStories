@@ -4,8 +4,6 @@ import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import { io } from "../socket/socket.js";
 
-
-
 export const getOrCreateConversation = async (req, res) => {
   try {
     const { otherUserId } = req.body;
@@ -18,7 +16,7 @@ export const getOrCreateConversation = async (req, res) => {
     }
     if (currentUserId.toString() === otherUserId.toString()) {
       return res.status(400).json({
-        message: "You cannot create conversation with yourself",
+        message: "You cannot chat with yourself",
       });
     }
 
@@ -52,8 +50,7 @@ export const getOrCreateConversation = async (req, res) => {
     // Fetch messages
     const messages = await Message.find({
       conversationId: conversation._id,
-    })
-      .sort({ createdAt: 1 })
+    }).sort({ createdAt: 1 });
 
     return res.status(200).json({
       conversation,
@@ -76,7 +73,7 @@ export const sendMessage = async (req, res) => {
     // Validate required fields
     if (!conversationId || !text?.trim()) {
       return res.status(400).json({
-        message: "ConversationId and message text are required",
+        message: "please write some message",
       });
     }
 
