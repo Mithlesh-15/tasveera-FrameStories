@@ -49,6 +49,6 @@ app.use("/api/v1/action", ActionRoute);
 app.use("/api/v1/feed", feedRoutes);
 app.use("/api/v1/chat", chatRoutes);
 
-server.listen(port , () => {
-  console.log(`Socket is running on http://localhost:${port}`);
+server.listen(port, () => {
+  console.log("Server running on", port);
 });
