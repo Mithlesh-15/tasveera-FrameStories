@@ -22,7 +22,6 @@ const server = http.createServer(app);
 initSocket(server);
 
 const allowed = [
-  "http://localhost:5173",
   "https://tasveera-mithlesh.netlify.app",
 ];
 
@@ -50,7 +49,7 @@ app.use("/api/v1/action", ActionRoute);
 app.use("/api/v1/feed", feedRoutes);
 app.use("/api/v1/chat", chatRoutes);
 
-server.listen(port , () => {
-  console.log(`Socket is running on http://localhost:${port}`);
-});
-// export default server;
+// server.listen(port , () => {
+//   console.log(`Socket is running on http://localhost:${port}`);
+// });
+export default server;
