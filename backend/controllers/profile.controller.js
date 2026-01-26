@@ -45,7 +45,7 @@ export const getProfileDetail = async (req, res) => {
 export const getPostForProfile = async (req, res) => {
   try {
     const { onePostId } = req.body;
-    const postDetail = await Post.findById(onePostId);
+    const postDetail = await Post.findById(onePostId).sort({ createdAt: -1 });
     if (!postDetail) {
       return res.json({
         success: false,

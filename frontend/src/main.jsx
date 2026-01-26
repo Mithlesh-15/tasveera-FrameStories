@@ -19,6 +19,7 @@ import Profile from "./pages/Profile.jsx";
 import Post from "./pages/Post.jsx";
 import NotFound from "./pages/NotFount.jsx";
 import UpdateProfile from "./pages/UpdateProfile.jsx";
+import Chats from "./pages/Chats.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         <Route path="/post/:postid" element={<Post />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
       </Route>
+      <Route path="/chats" element={<Chats />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="*" element={<NotFound />} />

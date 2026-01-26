@@ -8,6 +8,7 @@ import {
   MessageCircleQuestionMark,
   User,
   LogOut,
+  MessageCircle,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logout from "../utils/logout";
@@ -25,6 +26,7 @@ export default function MenuBar() {
     videos: 2,
     create: 2,
     profile: 2,
+    chats: 2,
   });
 
   const navItems = [
@@ -47,6 +49,12 @@ export default function MenuBar() {
       strokeWidth: "videos",
     },
     {
+      icon: MessageCircle,
+      label: "Chats",
+      path: "/chats",
+      strokeWidth: "chats",
+    },
+    {
       icon: PlusSquare,
       label: "Create",
       path: "/create",
@@ -57,9 +65,9 @@ export default function MenuBar() {
   const goToProfilePage = async () => {
     try {
       const response = await api.get("/api/v1/profile/get-my-details");
-      console.log(response.data.message)
+      console.log(response.data.message);
       if (!response.data.data) {
-        toast.error("Please Login First")
+        toast.error("Please Login First");
         navigate("/login");
       }
       navigate(`/profile/${response.data.data}`);
@@ -67,7 +75,7 @@ export default function MenuBar() {
     } catch (error) {
       console.error(error);
       if (error.status == 401) {
-        toast.error("Please Login First")
+        toast.error("Please Login First");
         navigate("/login");
       }
     }
@@ -83,6 +91,7 @@ export default function MenuBar() {
         videos: 2,
         create: 2,
         profile: 2,
+        chats: 2,
       });
     } else if (path === "/search") {
       setStrokeWidth({
@@ -91,6 +100,7 @@ export default function MenuBar() {
         videos: 2,
         create: 2,
         profile: 2,
+        chats: 2,
       });
     } else if (path === "/videos") {
       setStrokeWidth({
@@ -99,6 +109,16 @@ export default function MenuBar() {
         videos: 3,
         create: 2,
         profile: 2,
+        chats: 2,
+      });
+    } else if (path === "/chats") {
+      setStrokeWidth({
+        home: 2,
+        search: 2,
+        videos: 2,
+        create: 2,
+        profile: 2,
+        chats: 3,
       });
     } else if (path === "/create") {
       setStrokeWidth({
@@ -107,6 +127,7 @@ export default function MenuBar() {
         videos: 2,
         create: 3,
         profile: 2,
+        chats: 2,
       });
     } else if (path.startsWith("/profile")) {
       setStrokeWidth({
@@ -115,6 +136,7 @@ export default function MenuBar() {
         videos: 2,
         create: 2,
         profile: 3,
+        chats: 2,
       });
     }
   }, [location.pathname]);
@@ -213,6 +235,12 @@ export default function MenuBar() {
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <Film size={28} strokeWidth={strokeWidth.videos} />
+          </NavLink>
+          <NavLink
+            to="/chats"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <MessageCircle size={28} strokeWidth={strokeWidth.search} />
           </NavLink>
 
           <NavLink
