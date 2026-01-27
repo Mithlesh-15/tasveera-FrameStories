@@ -1,4 +1,4 @@
-# 📸 Tasveera – Frame Stories
+# 📸 Tasveera – Frame Stories (v2)
 
 ![MERN](https://img.shields.io/badge/MERN-Stack-green)
 ![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen)
@@ -8,19 +8,32 @@
 ![Tailwind](https://img.shields.io/badge/Style-TailwindCSS-38B2AC)
 ![Cloudinary](https://img.shields.io/badge/Media-Cloudinary-blue)
 ![Netlify](https://img.shields.io/badge/Frontend-Netlify-00C7B7)
-![Vercel](https://img.shields.io/badge/Backend-Vercel-black)
-
+![Railway](https://img.shields.io/badge/Backend-Railway-purple)
+![Socket.IO](https://img.shields.io/badge/Realtime-Socket.IO-black)
 
 ## 🚀 Project Overview
 
 Tasveera – Frame Stories is a full-stack social media web application built using the MERN stack where users can share their memories through photos and videos, follow other users, and interact with posts.
 
-This is a solo full-stack portfolio project built to strengthen real-world MERN skills and work with production-level tools like Cloudinary and MongoDB Atlas.
+This is Version 2 of the project, introducing real-time chat functionality using Socket.io and a production-ready deployment setup with Railway and Netlify. The goal of this version was to move beyond local development and solve real-world deployment, scalability, and networking challenges.
 
+## 📦 Version
+
+- v1 → Core social media features (posts, profiles, follow system)
+- v2 → Real-time chat, Railway deployment, production-ready architecture
 
 ## ✨ Features
 
+### 💬 Real-time Chat (New in v2)
+
+- One-to-one real-time messaging using Socket.io
+- Online user detection
+- Instant message delivery
+- Message persistence in the database
+- Unseen message handling
+
 ### 🔐 Authentication
+
 - Email and password login/signup
 - Username support
 - Password hashing using bcrypt
@@ -31,32 +44,38 @@ This is a solo full-stack portfolio project built to strengthen real-world MERN 
 - Logout functionality
 
 ### 🖼️ Posts
+
 - Upload image or video posts
 - Add captions to posts
 - Media stored using Cloudinary
 - Only media URLs stored in database
 
 ### 📰 Feed
+
 - Latest posts shown first
 - Infinite scrolling feed
 - Smooth loading experience
 
 ### ❤️ Interactions
+
 - Like and unlike posts
 - Double-click to like
 - Like count display
 - Pause and play videos
 
 ### 👥 Follow System
+
 - Follow and unfollow users
 - Follow from profile or post
 - Visit profile by clicking username
 
 ### 🔍 Search
+
 - Search users by username
 - Live search with debouncing
 
 ### 👤 Profiles
+
 - Profile photo
 - Bio
 - Followers and following count
@@ -64,10 +83,10 @@ This is a solo full-stack portfolio project built to strengthen real-world MERN 
 - Follow/unfollow button on other profiles
 - Edit profile option on own profile
 
-
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - React (Vite)
 - Tailwind CSS
 - Axios
@@ -75,6 +94,7 @@ This is a solo full-stack portfolio project built to strengthen real-world MERN 
 - Lucide Icons / React Icons
 
 ### Backend
+
 - Node.js
 - Express.js
 - JWT authentication
@@ -83,31 +103,35 @@ This is a solo full-stack portfolio project built to strengthen real-world MERN 
 - Custom authentication and upload middleware
 
 ### Database
+
 - MongoDB Atlas
 - Mongoose ODM
 
 ### Media Storage
-- Cloudinary
 
+- Cloudinary
 
 ## 📁 Project Structure
 
 - /frontend → React frontend
 - /backend → Express backend
 
-
 ## 🖥️ Screenshots
 
 ### Home Feed
+
 <img src="screenshots/tasveera-home.png" width="800" />
 
 ### Profile Page
+
 <img src="screenshots/tasveera-profile.png" width="700" />
 
 ### Upload Post
+
 <img src="screenshots/tasveera-upload.png" width="300" />
 
 ### LogIn & SignUp
+
 <table align="center">
   <tr>
     <td style="padding:25px;">
@@ -129,26 +153,28 @@ cd tasveera-FrameStories
 ```
 
 ### Backend Setup
+
 ```bash
 cd backend
 npm install
-npm run dev
-npm run start
+npm run dev   # development
+npm run start # production
 ```
 
 Create .env using env.example.
 
 ### Frontend Setup
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-
 ## 🔐 Environment Variables
 
 ### Backend
+
 ```
 PORT=
 DEFAULT_PROFILE_PIC=
@@ -160,6 +186,7 @@ CLOUDINARY_API_SECRET=
 ```
 
 ### Frontend
+
 ```
 VITE_API_KEY=
 VITE_AUTH_DOMAIN=
@@ -170,18 +197,19 @@ VITE_APP_ID=
 VITE_MEASUREMENT_ID=
 ```
 
-
-
 ## 🌍 Deployment
-- Frontend deployed on Netlify
-- Backend deployed on Vercel
-- Database hosted on MongoDB Atlas
 
+- Frontend deployed on Netlify
+- Backend deployed on Railway
+- Database hosted on MongoDB Atlas
+- Real-time communication powered by Socket.io
 
 ## 🔮 Future Enhancements
-- Real-time chat using Socket.io
-- Notification system
 
+- Notification system
+- Group chat
+- Message reactions
+- Media sharing in chat
 
 ## 👨‍💻 Author
 
