@@ -126,6 +126,25 @@ This is Version 2 of the project, introducing real-time chat functionality using
 
 <img src="screenshots/tasveera-profile.png" width="700" />
 
+### 💬 Real-time Chat (v2)
+
+**Desktop View**
+
+<img src="screenshots/tasveera-chat-big.png" width="800" />
+
+**Mobile View**
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/tasveera-chat-phone1.png" width="170" />
+    </td>
+    <td align="center">
+      <img src="screenshots/tasveera-chat-phone2.png" width="170" />
+    </td>
+  </tr>
+</table>
+
 ### Upload Post
 
 <img src="screenshots/tasveera-upload.png" width="300" />
